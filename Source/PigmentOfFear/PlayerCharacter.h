@@ -46,6 +46,14 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere)
+	USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditAnywhere)
+	UCameraComponent* Camera;
+
+	
+
 	
 	void Move(const FInputActionValue& Value);
 

@@ -2,6 +2,9 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "PlayerCharacter.h"
 
 // Sets default values
@@ -9,6 +12,31 @@ APlayerCharacter::APlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+
+}
+
+
+
+// Called when the game starts or when spawned
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(MovementContext, 0);
+		}
+	}
+	
+}
+
+// Called every frame
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 
 }
 
@@ -32,20 +60,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-// Called when the game starts or when spawned
-void APlayerCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(MovementContext, 0);
-		}
-	}
-	
-}
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
@@ -84,7 +98,7 @@ void APlayerCharacter::Interact()
 void APlayerCharacter::Grab()
 {
 
-	
+
 
 }
 
@@ -93,12 +107,6 @@ void APlayerCharacter::Jump()
 }
 
 
-// Called every frame
-void APlayerCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 
 
