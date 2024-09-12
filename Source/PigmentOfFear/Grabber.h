@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -33,12 +34,17 @@ public:
 
 private:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Grabber")
 	float MaxGrabDistance = 400.f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Grabber")
 	float GrabRadius = 100;
+	
+	// How far the item grabbed is from the player once held.
+	UPROPERTY(EditAnywhere, Category = "Grabber")
+	float HoldDistance = 50.f;
 
+	UPhysicsHandleComponent* GetPhysicsHandle() const;
 
 		
 };
