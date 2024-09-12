@@ -4,6 +4,7 @@
 #include "Grabber.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -21,7 +22,16 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+
+	if (PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FOUND PHYSICS HANDLE %s"), *PhysicsHandle->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NO PHYSICS HANDLE FOUND"));
+	}
 	
 }
 
@@ -41,9 +51,7 @@ void UGrabber::Grab()
 {
 
 	FVector StartLocation = GetComponentLocation();
-
 	FVector EndLocation = StartLocation + GetForwardVector() * MaxGrabDistance;
-
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false);
 
 	// Creating the sphere based on GrabRadius variable
@@ -71,9 +79,8 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 4.f, FColor::Green, TEXT("Grabber Released"));
-	}
+	
+
+
 }
 
