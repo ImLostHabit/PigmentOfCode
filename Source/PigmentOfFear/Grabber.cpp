@@ -31,8 +31,17 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FVector StartLocation = GetComponentLocation();
 	
+	
+
+
+}
+
+void UGrabber::Grab()
+{
+
+	FVector StartLocation = GetComponentLocation();
+
 	FVector EndLocation = StartLocation + GetForwardVector() * MaxGrabDistance;
 
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false);
@@ -57,7 +66,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 
 	
-
 
 }
 
