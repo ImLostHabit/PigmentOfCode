@@ -53,6 +53,7 @@ void UGrabber::Grab()
 	FVector StartLocation = GetComponentLocation();
 	FVector EndLocation = StartLocation + GetForwardVector() * MaxGrabDistance;
 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false);
+	DrawDebugSphere(GetWorld(), EndLocation, 10, 10, FColor::Blue, false, 5);
 
 	// Creating the sphere based on GrabRadius variable
 	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
@@ -65,6 +66,11 @@ void UGrabber::Grab()
 	if (HasHit)
 	{
 		AActor* HitActor = HitResult.GetActor();
+		
+		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Emerald, false, 5);
+		DrawDebugSphere(GetWorld(), HitResult.Location, 10, 10, FColor::White, false, 5);
+
+
 		FString ActorName = HitActor->GetActorNameOrLabel();
 		UE_LOG(LogTemp, Warning, TEXT("Actor %s Found!"), *ActorName);
 	}
