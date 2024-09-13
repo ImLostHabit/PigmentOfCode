@@ -16,6 +16,7 @@ void AGrabbableItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	
 }
 
 void AGrabbableItem::ItemReleased()
@@ -24,6 +25,10 @@ void AGrabbableItem::ItemReleased()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("YOU'RE SAFE .. FOR NOW."));
 	}
+}
+
+void AGrabbableItem::CheckForCollision()
+{
 }
 
 void AGrabbableItem::ItemGrabbed()

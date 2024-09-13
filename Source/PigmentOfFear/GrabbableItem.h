@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "GrabbableItem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemReleased, bool, bWasSuccessful);
+
 class UKartTrunk;
 
 UCLASS()
@@ -16,8 +18,18 @@ class PIGMENTOFFEAR_API AGrabbableItem : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AGrabbableItem();
+	UFUNCTION()
 	void ItemGrabbed();
+	
+	UFUNCTION()
 	void ItemReleased();
+	
+	UFUNCTION()
+	void CheckForCollision();
+
+	//Delegates
+	FItemReleased ItemReleasedDelegate;
+
 
 protected:
 	// Called when the game starts or when spawned

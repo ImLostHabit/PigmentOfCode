@@ -2,7 +2,6 @@
 
 
 #include "Engine/World.h"
-// #include "GrabbableItem.h"
 #include "DrawDebugHelpers.h"
 #include "Grabber.h"
 
@@ -73,10 +72,10 @@ void UGrabber::Grab()
 		{
 			if (GrabbedItem == nullptr)
 			{
-			UE_LOG(LogTemp, Warning, TEXT("GRABBED ITEM ENTER"));
+				// As long as we dont have a item already held, asign the HitItem as our GrabbedItem
+				//GrabbedItem is a variable made in .h, 
 			GrabbedItem = HitItem;
 			OnItemGrabbed.Broadcast(true);
-			UE_LOG(LogTemp, Warning, TEXT("GRABBED ITEM EXIT"));
 			}
 
 
@@ -94,8 +93,7 @@ void UGrabber::Grab()
 			NAME_None, 
 			HitResult.ImpactPoint, 
 			GetComponentRotation());
-		
-		// Creating a pointer to the grabbable item, casting it to GrabbableItem, and obtaining the actor.
+	
 		
 
 	}
@@ -122,7 +120,7 @@ void UGrabber::OnGrabbed(bool bWasSuccessful)
 void UGrabber::OnReleased(bool bWasSuccessful)
 {
 
-	if (bWasSuccessful && GrabbedItem)
+	if (bWasSuccessful)
 	{
 		GrabbedItem->ItemReleased();
 		GrabbedItem = nullptr;
@@ -144,6 +142,7 @@ void UGrabber::Release()
 
 	if (PhysicsHandle->GetGrabbedComponent() != nullptr)
 	{
+		OnItemReleased.Broadcast(true);
 		PhysicsHandle->ReleaseComponent();
 	}
 
