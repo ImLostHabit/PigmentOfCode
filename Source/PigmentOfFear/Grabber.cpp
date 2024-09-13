@@ -21,7 +21,11 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+	if (PhysicsHandle == nullptr)
+	{
+		return;
+	}
 	
 }
 
@@ -37,21 +41,73 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		return;
 	}
 
-	FVector TargetLocation = GetComponentLocation() + GetForwardVector() * HoldDistance;
-	PhysicsHandle->SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
-	
-
-
+	if (PhysicsHandle->GetGrabbedComponent() != nullptr)
+	{
+		FVector TargetLocation = GetComponentLocation() + GetForwardVector() * HoldDistance;
+		PhysicsHandle->SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
+	}
 }
 
 void UGrabber::Grab()
 {
 
-	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if(PhysicsHandle == nullptr)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Physics Handle Not Found"));
+		return;
+	}
+
+	FHitResult HitResult;
+	bool HasHit = GetGrabbableInReach(HitResult);
+
+	if (HasHit)
+	{
+		// Crypt Raider 97
+
+		AActor* HitActor = HitResult.GetActor();
+		UE_LOG(LogTemp, Display, TEXT("Hit Actor"));
+
+		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
+		HitComponent->WakeAllRigidBodies();
+		HitResult.GetActor()->Tags.Add("Grabbed");
+
+		PhysicsHandle->GrabComponentAtLocationWithRotation(HitComponent, 
+			NAME_None, 
+			HitResult.ImpactPoint, 
+			GetComponentRotation());
+	}
+}
+
+void UGrabber::Release()
+{
+	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
+	if (PhysicsHandle == nullptr)
 	{
 		return;
 	}
+
+	if (PhysicsHandle->GetGrabbedComponent() != nullptr)
+	{
+		PhysicsHandle->ReleaseComponent();
+	}
+
+}
+
+UPhysicsHandleComponent* UGrabber::GetPhysicsHandle() const
+{
+	UPhysicsHandleComponent* PhysicsHandle =  GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Grabber missing physics handle!"));
+	}
+
+	return PhysicsHandle;
+	
+}
+
+bool UGrabber::GetGrabbableInReach(FHitResult& OutHitResult) const
+{
 
 	FVector StartLocation = GetComponentLocation();
 	FVector EndLocation = StartLocation + GetForwardVector() * MaxGrabDistance;
@@ -61,40 +117,9 @@ void UGrabber::Grab()
 	// Creating the sphere based on GrabRadius variable
 	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
 
-
-	FHitResult HitResult;
-
-	bool HasHit = GetWorld()->SweepSingleByChannel(HitResult, StartLocation, EndLocation, FQuat::Identity, ECC_GameTraceChannel2, Sphere);
-
-	if (HasHit)
-	{
-		PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), 
-			NAME_None, 
-			HitResult.ImpactPoint, 
-			GetComponentRotation()
-		);
-	}
-	
-
-	
+	return GetWorld()->SweepSingleByChannel(OutHitResult, StartLocation, EndLocation, FQuat::Identity, ECC_GameTraceChannel2, Sphere);
 
 }
 
-void UGrabber::Release()
-{
-	
 
-
-}
-
-UPhysicsHandleComponent* UGrabber::GetPhysicsHandle() const
-{
-	UPhysicsHandleComponent* Result =  GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (Result == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Grabber missing physics handle!"));
-	}
-	return Result;
-	
-}
 
