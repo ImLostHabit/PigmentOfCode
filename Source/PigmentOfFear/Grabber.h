@@ -8,6 +8,10 @@
 #include "Grabber.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemGrabbed, bool, bWasSuccessful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemReleased, bool, bWasSuccessful);
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PIGMENTOFFEAR_API UGrabber : public USceneComponent
 {
@@ -28,11 +32,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Grab();
 
+	void OnGrabbed(bool bWasSuccessful);
+
 	UFUNCTION(BlueprintCallable)
 	void Release();
 
 
+	// Custom Delegates for the GrabbableItem to bind callbacks for
+	FOnItemGrabbed OnItemGrabbed;
+	FOnItemReleased OnItemReleased;
+
+
 private:
+
+	
+
+
+	// Grabber Properties
 
 	UPROPERTY(EditAnywhere, Category = "Grabber")
 	float MaxGrabDistance = 400.f;

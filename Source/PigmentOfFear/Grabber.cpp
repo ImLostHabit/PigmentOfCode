@@ -3,6 +3,7 @@
 
 #include "Grabber.h"
 #include "Engine/World.h"
+#include "GrabbableItem.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
@@ -12,7 +13,7 @@ UGrabber::UGrabber()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	
 }
 
 
@@ -20,6 +21,9 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OnItemGrabbed.AddDynamic(this, &UGrabber::OnGrabbed);
+
 
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 	if (PhysicsHandle == nullptr)
@@ -76,6 +80,23 @@ void UGrabber::Grab()
 			NAME_None, 
 			HitResult.ImpactPoint, 
 			GetComponentRotation());
+			OnItemGrabbed.Broadcast(true);
+	}
+	else
+	{
+		OnItemGrabbed.Broadcast(false);
+	}
+}
+
+void UGrabber::OnGrabbed(bool bWasSuccessful)
+{
+	if (bWasSuccessful == true)
+	{
+
+	}
+	else
+	{
+
 	}
 }
 

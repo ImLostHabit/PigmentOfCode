@@ -1,27 +1,33 @@
 
 
-
+#include "Components/BoxComponent.h"
 #include "KartTrunk.h"
 
-// Sets default values
-AKartTrunk::AKartTrunk()
+// Sets default values for this component's properties
+UKartTrunk::UKartTrunk()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+	// off to improve performance if you don't need them.
+	PrimaryComponentTick.bCanEverTick = true;
 
 }
 
-// Called when the game starts or when spawned
-void AKartTrunk::BeginPlay()
+
+// Called when the game starts
+void UKartTrunk::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// ...
 	
 }
 
-// Called every frame
-void AKartTrunk::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
+// Called every frame
+void UKartTrunk::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// ...
 }
 
