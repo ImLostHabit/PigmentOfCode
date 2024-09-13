@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GrabbableItem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemReleased, bool, bWasSuccessful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemReleasedDelegate, bool, bWasSuccessful);
 
 class UKartTrunk;
 
@@ -25,10 +25,10 @@ public:
 	void ItemReleased();
 	
 	UFUNCTION()
-	void CheckForCollision();
+	void CheckForCollision(bool bWasSuccessful);
 
 	//Delegates
-	FItemReleased ItemReleasedDelegate;
+	FItemReleasedDelegate ItemReleasedDelegate;
 
 
 protected:

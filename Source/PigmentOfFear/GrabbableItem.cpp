@@ -16,7 +16,8 @@ void AGrabbableItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
+	ItemReleasedDelegate.AddDynamic(this, &AGrabbableItem::CheckForCollision);
+
 }
 
 void AGrabbableItem::ItemReleased()
@@ -27,7 +28,7 @@ void AGrabbableItem::ItemReleased()
 	}
 }
 
-void AGrabbableItem::CheckForCollision()
+void AGrabbableItem::CheckForCollision(bool bWasSuccesful)
 {
 }
 

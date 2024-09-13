@@ -6,6 +6,7 @@
 #include "Components/SceneComponent.h"
 #include "KartTrunk.generated.h"
 
+class UBoxComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PIGMENTOFFEAR_API UKartTrunk : public USceneComponent
@@ -19,6 +20,9 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* BoxComponent;
 
 private:
 	
