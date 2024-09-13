@@ -1,10 +1,10 @@
 
 
 
-#include "Grabber.h"
 #include "Engine/World.h"
-#include "GrabbableItem.h"
+// #include "GrabbableItem.h"
 #include "DrawDebugHelpers.h"
+#include "Grabber.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -23,6 +23,7 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	OnItemGrabbed.AddDynamic(this, &UGrabber::OnGrabbed);
+	OnItemReleased.AddDynamic(this, &UGrabber::OnReleased);
 
 
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
@@ -67,6 +68,19 @@ void UGrabber::Grab()
 
 	if (HasHit)
 	{
+		AGrabbableItem* HitItem = Cast<AGrabbableItem>(HitResult.GetActor());
+		if (HitItem)
+		{
+			if (GrabbedItem == nullptr)
+			{
+			UE_LOG(LogTemp, Warning, TEXT("GRABBED ITEM ENTER"));
+			GrabbedItem = HitItem;
+			OnItemGrabbed.Broadcast(true);
+			UE_LOG(LogTemp, Warning, TEXT("GRABBED ITEM EXIT"));
+			}
+
+
+		}
 		// Crypt Raider 97
 
 		AActor* HitActor = HitResult.GetActor();
@@ -80,7 +94,10 @@ void UGrabber::Grab()
 			NAME_None, 
 			HitResult.ImpactPoint, 
 			GetComponentRotation());
-			OnItemGrabbed.Broadcast(true);
+		
+		// Creating a pointer to the grabbable item, casting it to GrabbableItem, and obtaining the actor.
+		
+
 	}
 	else
 	{
@@ -90,14 +107,31 @@ void UGrabber::Grab()
 
 void UGrabber::OnGrabbed(bool bWasSuccessful)
 {
-	if (bWasSuccessful == true)
+	if (bWasSuccessful)
 	{
+		UE_LOG(LogTemp, Error, TEXT("ON GRABBED SUCCESSFUL"));
+		GrabbedItem->ItemGrabbed();
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("GrabbedItem is nullptr"));
+	}
+}
 
+void UGrabber::OnReleased(bool bWasSuccessful)
+{
+
+	if (bWasSuccessful && GrabbedItem)
+	{
+		GrabbedItem->ItemReleased();
+		GrabbedItem = nullptr;
 	}
 	else
 	{
 
 	}
+
 }
 
 void UGrabber::Release()

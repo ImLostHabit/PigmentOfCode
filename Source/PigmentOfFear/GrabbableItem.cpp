@@ -22,8 +22,15 @@ void AGrabbableItem::ItemReleased()
 {
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Purple, TEXT("RELEASE ME YOU PIG"));
+		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("YOU'RE SAFE .. FOR NOW."));
 	}
+}
+
+void AGrabbableItem::ItemGrabbed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ITEM GRABBED VIA DELEGATE"));
+
+
 }
 
 // Called every frame

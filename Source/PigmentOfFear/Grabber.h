@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "GrabbableItem.h"
 #include "Grabber.generated.h"
 
 
@@ -32,7 +33,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Grab();
 
+	UFUNCTION(BlueprintCallable)
 	void OnGrabbed(bool bWasSuccessful);
+
+	UFUNCTION(BlueprintCallable)
+	void OnReleased(bool bWasSuccessful);
 
 	UFUNCTION(BlueprintCallable)
 	void Release();
@@ -43,10 +48,16 @@ public:
 	FOnItemReleased OnItemReleased;
 
 
-private:
+protected:
 
 	
 
+private:
+
+
+	
+	UPROPERTY()
+	AGrabbableItem* GrabbedItem = nullptr;
 
 	// Grabber Properties
 

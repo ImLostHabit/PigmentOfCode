@@ -16,14 +16,17 @@ class PIGMENTOFFEAR_API AGrabbableItem : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AGrabbableItem();
+	void ItemGrabbed();
+	void ItemReleased();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
 	UKartTrunk* KartTrunk;
 
-	void ItemReleased();
+
 
 public:	
 	// Called every frame
