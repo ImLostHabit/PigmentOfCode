@@ -26,19 +26,28 @@ void AGrabbableItem::ItemReleased()
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("YOU'RE SAFE .. FOR NOW."));
-		ItemReleasedDelegate.Broadcast(true);
+		UE_LOG(LogTemp, Warning, TEXT("Item Released, calling ItemReleasedDelegate..."));
+		ItemReleasedDelegate.Broadcast(true, CollidingKart);
 	}
 }
 
-void AGrabbableItem::CallForCollision(bool bWasSuccesful)
+void AGrabbableItem::CallForCollision(bool bWasSuccesful, ABaseKart* CurrentKart)
 {
-	if (GEngine)
+	UE_LOG(LogTemp, Warning, TEXT("CallForCollision Answered for ItemReleasedDelegate, CastChecking CollidingKart..."));
+	CollidingKart = Cast<ABaseKart>(CurrentKart);
+	
+
+	
+	if (CurrentKart)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("CALL FOR COLLISION TRIGGERED"));
+		UE_LOG(LogTemp, Warning, TEXT("Colliding cart found. \n Calling CheckForCollision"));
+		CurrentKart->CheckForCollision();
 	}
-		
-	
-	
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Colliding Kart Found"));
+		return;
+	}
 }
 
 void AGrabbableItem::ItemGrabbed()

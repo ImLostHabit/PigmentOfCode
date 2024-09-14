@@ -39,6 +39,12 @@ ABaseKart::ABaseKart()
 
 void ABaseKart::CheckForCollision()
 {
+	if (GEngine)
+	{
+	GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("CHECK FOR COLLISION CALLED"));
+
+	}
+
 }
 
 void ABaseKart::Throttle()
