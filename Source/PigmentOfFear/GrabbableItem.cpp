@@ -2,6 +2,7 @@
 
 #include "Grabber.h"
 #include "GrabbableItem.h"
+#include "KartTrunk.h"
 
 // Sets default values
 AGrabbableItem::AGrabbableItem()
@@ -16,7 +17,7 @@ void AGrabbableItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	ItemReleasedDelegate.AddDynamic(this, &AGrabbableItem::CheckForCollision);
+	ItemReleasedDelegate.AddDynamic(this, &AGrabbableItem::CallForCollision);
 
 }
 
@@ -25,11 +26,19 @@ void AGrabbableItem::ItemReleased()
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("YOU'RE SAFE .. FOR NOW."));
+		ItemReleasedDelegate.Broadcast(true);
 	}
 }
 
-void AGrabbableItem::CheckForCollision(bool bWasSuccesful)
+void AGrabbableItem::CallForCollision(bool bWasSuccesful)
 {
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("CALL FOR COLLISION TRIGGERED"));
+	}
+		
+	
+	
 }
 
 void AGrabbableItem::ItemGrabbed()

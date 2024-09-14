@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "BaseKart.h"
 #include "GrabbableItem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemReleasedDelegate, bool, bWasSuccessful);
@@ -25,7 +26,7 @@ public:
 	void ItemReleased();
 	
 	UFUNCTION()
-	void CheckForCollision(bool bWasSuccessful);
+	void CallForCollision(bool bWasSuccessful);
 
 	//Delegates
 	FItemReleasedDelegate ItemReleasedDelegate;
@@ -37,6 +38,9 @@ protected:
 
 	UPROPERTY()
 	UKartTrunk* KartTrunk;
+	
+	UPROPERTY()
+	ABaseKart* CurrentKart;
 
 
 

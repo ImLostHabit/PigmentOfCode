@@ -77,8 +77,6 @@ void UGrabber::Grab()
 			GrabbedItem = HitItem;
 			OnItemGrabbed.Broadcast(true);
 			}
-
-
 		}
 		// Crypt Raider 97
 

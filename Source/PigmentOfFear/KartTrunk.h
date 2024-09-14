@@ -24,6 +24,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* BoxComponent;
 
+	
+
+	UFUNCTION()
+	void CheckForItems();
+	
+
 private:
 	
 
