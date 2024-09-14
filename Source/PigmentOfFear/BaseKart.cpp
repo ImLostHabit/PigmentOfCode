@@ -39,11 +39,8 @@ ABaseKart::ABaseKart()
 
 void ABaseKart::CheckForCollision()
 {
-	if (GEngine)
-	{
-	GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("CHECK FOR COLLISION CALLED"));
+	UE_LOG(LogTemp, Warning, TEXT("CHECK FOR COLLISION ANSWERED"));
 
-	}
 
 }
 

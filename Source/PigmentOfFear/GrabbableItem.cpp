@@ -33,20 +33,37 @@ void AGrabbableItem::ItemReleased()
 
 void AGrabbableItem::CallForCollision(bool bWasSuccesful, ABaseKart* CurrentKart)
 {
-	UE_LOG(LogTemp, Warning, TEXT("CallForCollision Answered for ItemReleasedDelegate, CastChecking CollidingKart..."));
-	CollidingKart = Cast<ABaseKart>(CurrentKart);
-	
 
-	
 	if (CurrentKart)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Colliding cart found. \n Calling CheckForCollision"));
-		CurrentKart->CheckForCollision();
+		UE_LOG(LogTemp, Warning, TEXT("CurrentKart is valid prior to cast."));
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Colliding Kart Found"));
-		return;
+		// CURRENTKART WAS NEVER VALID
+		// NEED TO STORE A VARIABLE TO  Cast<ABaseKart>
+		// TAKE THAT VARIABLE AND NULLCHECK
+		// IF CASTED CART - CHECK FOR COLLISION 
+		UE_LOG(LogTemp, Warning, TEXT("CurrentKart was never valid."));
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("CallForCollision Answered for ItemReleasedDelegate, CastChecking CollidingKart..."));
+	
+	
+	ABaseKart* CastedKart = Cast<ABaseKart>(CurrentKart);
+	CastedKart = CurrentKart;
+
+	if (CastedKart)
+	{
+		CollidingKart = CastedKart;
+		UE_LOG(LogTemp, Warning, TEXT("Cast succesfful, CollidingKart assigned. \n Calling Check For Collision.."));
+
+		CastedKart->CheckForCollision();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NO CART FOUND"));
+
 	}
 }
 
