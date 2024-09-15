@@ -8,11 +8,13 @@
 #include "BaseKart.generated.h"
 
 
+
 class UBoxComponent;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class ATrunkItem;
+class USceneComponent;
 
 /**
  * 
@@ -38,13 +40,28 @@ public:
 
 	ABaseKart* CollidingKart;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 		const FHitResult& SweepResult);
 	
 	UPROPERTY(EditAnywhere)
-	UBoxComponent* KartTrunkCollision;
+	UBoxComponent* KartTrunkCollision01;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* KartTrunkCollision02;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* SlotCollision01;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* SlotCollision02;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* TrunkSlot01;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* TrunkSlot02;
 
 	UPROPERTY()
 	ATrunkItem* TrunkItem;
