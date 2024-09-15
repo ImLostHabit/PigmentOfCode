@@ -46,6 +46,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* KartTrunkCollision;
 
+	UPROPERTY()
 	AGrabbableItem* OverlappingItem;
 
 protected:
