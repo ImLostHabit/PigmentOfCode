@@ -1,7 +1,7 @@
 
 
-#include "Grabber.h"
 #include "GrabbableItem.h"
+#include "Grabber.h"
 #include "Components/BoxComponent.h"
 #include "BaseKart.h"
 
@@ -14,12 +14,10 @@ AGrabbableItem::AGrabbableItem()
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 	ItemMesh->SetVisibility(true);
 	ItemMesh->SetupAttachment(RootComponent);
-	
+
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("ItemBoxComponent"));
 	BoxComponent->SetGenerateOverlapEvents(true);
 	BoxComponent->SetupAttachment(ItemMesh);
-
-	
 
 }
 
@@ -27,9 +25,6 @@ AGrabbableItem::AGrabbableItem()
 void AGrabbableItem::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
-	
 	
 
 }
