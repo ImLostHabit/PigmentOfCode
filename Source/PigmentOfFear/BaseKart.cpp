@@ -4,9 +4,17 @@
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GrabbableItem.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "BaseKart.h"
+
+void ABaseKart::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	KartTrunkCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+}
 
 void ABaseKart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -24,8 +32,9 @@ void ABaseKart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 ABaseKart::ABaseKart()
 {
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
-	CollisionBox->SetupAttachment(RootComponent);
+	KartTrunkCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
+	KartTrunkCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	KartTrunkCollision->SetupAttachment(RootComponent);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -34,12 +43,32 @@ ABaseKart::ABaseKart()
 	Camera->SetupAttachment(SpringArm);
 
 
-	
+
 }
 
-void ABaseKart::CheckForCollision()
+void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+	const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("SOMETHING OVERLAPPED"));
+
+	if (OtherActor)
+	{
+		OverlappingItem = Cast<AGrabbableItem>(OtherActor);
+
+		if (OtherActor)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING ITEM VALID."));
+		}
+
+	}
+}
+
+void ABaseKart::CheckForCollision(AGrabbableItem* GrabbableItem)
 {
 	UE_LOG(LogTemp, Warning, TEXT("BASE KART CHECK FOR COLLISION ANSWERED"));
+
+
 
 
 }

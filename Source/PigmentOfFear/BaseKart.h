@@ -12,6 +12,7 @@ class UBoxComponent;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
+class AGrabbableItem;
 
 /**
  * 
@@ -21,6 +22,10 @@ class PIGMENTOFFEAR_API ABaseKart : public AWheeledVehiclePawn
 {
 	GENERATED_BODY()
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 
 public:
 
@@ -29,19 +34,27 @@ public:
 	ABaseKart();
 
 	UFUNCTION(BlueprintCallable)
-	void CheckForCollision();
+	void CheckForCollision(AGrabbableItem* GrabbableItem);
 
 	ABaseKart* CollidingKart;
 
+	UFUNCTION()
+	void OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+		const FHitResult& SweepResult);
+	
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* KartTrunkCollision;
+
+	AGrabbableItem* OverlappingItem;
+
 protected:
 
-	
+
 
 
 private:
 
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* CollisionBox;
 
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;

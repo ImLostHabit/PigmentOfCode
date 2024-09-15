@@ -11,6 +11,8 @@
 
 class UKartTrunk;
 class ABaseKart;
+class UBoxComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class PIGMENTOFFEAR_API AGrabbableItem : public AActor
@@ -31,14 +33,19 @@ public:
 
 	UPROPERTY()
 	ABaseKart* CurrentKart;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* BoxComponent;
+
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* ItemMesh;
 	
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
-
+	
 
 
 public:	
