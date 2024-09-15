@@ -26,7 +26,7 @@ public:
 	void ItemGrabbed();
 	
 	UFUNCTION()
-	void ItemReleased();
+	virtual void ItemReleased();
 
 	
 

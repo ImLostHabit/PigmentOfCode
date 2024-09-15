@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GrabbableItem.h"
+#include "TrunkItem.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
@@ -54,9 +55,9 @@ void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 
 	if (OtherActor)
 	{
-		OverlappingItem = Cast<AGrabbableItem>(OtherActor);
+		TrunkItem = Cast<ATrunkItem>(OtherActor);
 
-		if (OverlappingItem)
+		if (TrunkItem)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING ITEM VALID."));
 		}
@@ -68,10 +69,9 @@ void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 }
 
-void ABaseKart::CheckForCollision(AGrabbableItem* GrabbableItem)
+void ABaseKart::CheckForCollision(ATrunkItem* OverlappingTrunkItem)
 {
 	UE_LOG(LogTemp, Warning, TEXT("BASE KART CHECK FOR COLLISION ANSWERED"));
-
 
 
 

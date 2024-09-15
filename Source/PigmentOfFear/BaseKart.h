@@ -12,7 +12,7 @@ class UBoxComponent;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
-class AGrabbableItem;
+class ATrunkItem;
 
 /**
  * 
@@ -34,7 +34,7 @@ public:
 	ABaseKart();
 
 	UFUNCTION(BlueprintCallable)
-	void CheckForCollision(AGrabbableItem* GrabbableItem);
+	void CheckForCollision(ATrunkItem* TrunkItem);
 
 	ABaseKart* CollidingKart;
 
@@ -47,7 +47,7 @@ public:
 	UBoxComponent* KartTrunkCollision;
 
 	UPROPERTY()
-	AGrabbableItem* OverlappingItem;
+	ATrunkItem* TrunkItem;
 
 protected:
 

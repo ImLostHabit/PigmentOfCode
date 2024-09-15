@@ -13,5 +13,10 @@ UCLASS()
 class PIGMENTOFFEAR_API ATrunkItem : public AGrabbableItem
 {
 	GENERATED_BODY()
+
+
+public:
+
+	void ItemReleased() override;
 	
 };
