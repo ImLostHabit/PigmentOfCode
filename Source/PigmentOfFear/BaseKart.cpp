@@ -6,9 +6,14 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GrabbableItem.h"
+#include "Components/PrimitiveComponent.h"
 #include "TrunkItem.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+
+// GAMETRACE CHANNEL 1  = USABLE (HORROR ENGINE)
+// GAMETRACE CHANNEL 2 = GRABBER
+// GAMETRACE CHANNEL 3 = TRUNK COLLISION CHANNEL
 
 void ABaseKart::BeginPlay()
 {
@@ -17,9 +22,12 @@ void ABaseKart::BeginPlay()
 	
 
 	KartTrunkCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+	KartTrunkCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
 	KartTrunkCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+	KartTrunkCollision02->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
 	SlotCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
 	SlotCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+
 
 
 
@@ -49,7 +57,9 @@ ABaseKart::ABaseKart()
 	SlotCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision01"));
 	SlotCollision02 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision02"));
 	SlotCollision01->SetupAttachment(TrunkSlot01);
+	SlotCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
 	SlotCollision02->SetupAttachment(TrunkSlot02);
+	SlotCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
 
 
 	KartTrunkCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("TrunkCollision01"));
@@ -59,7 +69,7 @@ ABaseKart::ABaseKart()
 	KartTrunkCollision02->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	KartTrunkCollision02->SetupAttachment(RootComponent);
 
-	// SlotCollision01->SetCollisionResponseToChannel()
+	SlotCollision01->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel3, ECollisionResponse::ECR_Overlap);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -68,9 +78,7 @@ ABaseKart::ABaseKart()
 	Camera->SetupAttachment(SpringArm);
 }
 
-void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-	const FHitResult& SweepResult)
+void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("SOMETHING OVERLAPPED, VERIFYING IF GRABBABLE.."));
 
@@ -84,6 +92,24 @@ void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 01 COLLIDED"));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
+			OtherComp->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
+			OtherComp->AttachToComponent(TrunkSlot01, TransformTules);
+			
+
+		}
+	}
+
+
+	if (OverlappedComponent == SlotCollision01 && TrunkItem)
+	{
+		if (GEngine)
+		{
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 01 COLLIDED"));
+			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
+			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
+			SlotCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
+			UE_LOG(LogTemp, Warning, TEXT("TRUNK01 COLLISION SET TO IGNORE"));
 			OtherComp->AttachToComponent(TrunkSlot01, TransformTules);
 		}
 	}
@@ -96,10 +122,14 @@ void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 02 COLLIDED"));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
+			SlotCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
+			UE_LOG(LogTemp, Warning, TEXT("TRUNK02 COLLISION SET TO IGNORE"));
 			OtherComp->AttachToComponent(TrunkSlot02, TransformTules);
 		}
 	}
 }
+
+
 
 void ABaseKart::CheckForCollision(ATrunkItem* OverlappingTrunkItem)
 {
@@ -107,6 +137,13 @@ void ABaseKart::CheckForCollision(ATrunkItem* OverlappingTrunkItem)
 
 
 
+}
+
+void ABaseKart::OnKartTrunkEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("CART ENDED OVERLAP .. RE-ENABLING COLLISION"));
+	OtherComp->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
+	UE_LOG(LogTemp, Warning, TEXT("COLLISION RE-ENABLED"));
 }
 
 void ABaseKart::Throttle()
