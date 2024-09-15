@@ -125,7 +125,7 @@ void UGrabber::OnReleased(bool bWasSuccessful)
 	}
 	else
 	{
-
+		UE_LOG(LogTemp, Error, TEXT("FAILED TO RELEASE"));
 	}
 
 }
@@ -143,7 +143,6 @@ void UGrabber::Release()
 		OnItemReleased.Broadcast(true);
 		PhysicsHandle->ReleaseComponent();
 	}
-
 }
 
 UPhysicsHandleComponent* UGrabber::GetPhysicsHandle() const

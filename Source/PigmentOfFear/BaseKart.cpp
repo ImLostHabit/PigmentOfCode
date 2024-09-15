@@ -50,15 +50,19 @@ void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("SOMETHING OVERLAPPED"));
+	UE_LOG(LogTemp, Warning, TEXT("SOMETHING OVERLAPPED, VERIFYING IF GRABBABLE.."));
 
 	if (OtherActor)
 	{
 		OverlappingItem = Cast<AGrabbableItem>(OtherActor);
 
-		if (OtherActor)
+		if (OverlappingItem)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING ITEM VALID."));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("OVERLAPPING IS NOT VALID."));
 		}
 
 	}
