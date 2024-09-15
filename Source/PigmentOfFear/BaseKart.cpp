@@ -32,14 +32,14 @@ ABaseKart::ABaseKart()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
-	
+
 
 	
 }
 
 void ABaseKart::CheckForCollision()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CHECK FOR COLLISION ANSWERED"));
+	UE_LOG(LogTemp, Warning, TEXT("BASE KART CHECK FOR COLLISION ANSWERED"));
 
 
 }

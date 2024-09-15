@@ -5,12 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BaseKart.h"
-#include "KartTrunk.h"
 #include "GrabbableItem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FItemReleasedDelegate, bool, bWasSuccessful, ABaseKart*, CurrentKart);
+
 
 class UKartTrunk;
+class ABaseKart;
 
 UCLASS()
 class PIGMENTOFFEAR_API AGrabbableItem : public AActor
@@ -25,22 +25,18 @@ public:
 	
 	UFUNCTION()
 	void ItemReleased();
-	
-	UFUNCTION()
-	void CallForCollision(bool bWasSuccessful, ABaseKart* CurrentKart);
 
-	//Delegates
-	FItemReleasedDelegate ItemReleasedDelegate;
+	
+
 
 	UPROPERTY()
-	UKartTrunk* KartTrunk;
+	ABaseKart* CurrentKart;
 	
-	UPROPERTY()
-	ABaseKart* CollidingKart;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 
 
 
