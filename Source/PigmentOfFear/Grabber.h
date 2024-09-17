@@ -9,8 +9,6 @@
 #include "Grabber.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemGrabbed, bool, bWasSuccessful);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemReleased, bool, bWasSuccessful);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -34,18 +32,7 @@ public:
 	void Grab();
 
 	UFUNCTION(BlueprintCallable)
-	void OnGrabbed(bool bWasSuccessful);
-
-	UFUNCTION(BlueprintCallable)
-	void OnReleased(bool bWasSuccessful);
-
-	UFUNCTION(BlueprintCallable)
 	void Release();
-
-
-	// Custom Delegates for the GrabbableItem to bind callbacks for
-	FOnItemGrabbed OnItemGrabbed;
-	FOnItemReleased OnItemReleased;
 
 
 protected:
@@ -71,8 +58,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Grabber")
 	float HoldDistance = 50.f;
 
+	UFUNCTION()
 	UPhysicsHandleComponent* GetPhysicsHandle() const;
 
+	UFUNCTION()
 	bool GetGrabbableInReach(FHitResult& OutHitResult) const;
 
 		

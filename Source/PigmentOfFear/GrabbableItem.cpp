@@ -25,19 +25,42 @@ AGrabbableItem::AGrabbableItem()
 void AGrabbableItem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ItemReleasedDelegate.AddDynamic(this, &AGrabbableItem::ItemReleased);
+
+	
 	
 
 }
 
-void AGrabbableItem::ItemReleased()
+void AGrabbableItem::ItemReleased(AGrabbableItem* InputItem, bool bWasSuccessful)
 {
-	if (GEngine)
+	CurrentItem = Cast<AGrabbableItem>(InputItem);
+	if (CurrentItem && GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("YOU'RE SAFE .. FOR NOW."));
-		UE_LOG(LogTemp, Warning, TEXT("Item Released, calling ItemReleasedDelegate..."));
+		UE_LOG(LogTemp, Warning, TEXT("Item Released, calling CheckForCollision delegate.."));
+		CheckForCollision(InputItem);
+	}
+}
 
-		
-
+void AGrabbableItem::CheckForCollision(AGrabbableItem* InputItem)
+{
+	CurrentItem = Cast<AGrabbableItem>(InputItem);
+	
+	if (CurrentKart)
+	{
+		UBoxComponent* CurrentBox = CurrentKart->GetComponentByClass<UBoxComponent>();
+		if (CurrentKart && CurrentBox)
+		{
+			FHitResult SweepResult;
+			UBoxComponent* OverlappedComponent = CurrentKart->GetComponentByClass<UBoxComponent>();
+			CurrentKart->TrunkOverlapped.Broadcast(OverlappedComponent, this, BoxComponent, 0, false, SweepResult, true);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Item not released within bounds"));
+		}
 	}
 }
 

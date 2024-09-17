@@ -5,8 +5,8 @@
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GrabbableItem.h"
 #include "Components/PrimitiveComponent.h"
+#include "GrabbableItem.h"
 #include "TrunkItem.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -20,13 +20,14 @@ void ABaseKart::BeginPlay()
 	Super::BeginPlay();
 	
 	
+	TrunkOverlapped.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
 
-	KartTrunkCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
-	KartTrunkCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
-	KartTrunkCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
-	KartTrunkCollision02->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
-	SlotCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
-	SlotCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+	//KartTrunkCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+	//KartTrunkCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
+	//KartTrunkCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+	//KartTrunkCollision02->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
+	//SlotCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+	//SlotCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
 
 
 
@@ -78,9 +79,9 @@ ABaseKart::ABaseKart()
 	Camera->SetupAttachment(SpringArm);
 }
 
-void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult, bool bWasSuccessful)
 {
-	UE_LOG(LogTemp, Warning, TEXT("SOMETHING OVERLAPPED, VERIFYING IF GRABBABLE.."));
+	UE_LOG(LogTemp, Warning, TEXT("RELEASE NOTICED WITHIN BOUNDS"));
 
 
 	TrunkItem = Cast<ATrunkItem>(OtherActor);
@@ -89,12 +90,12 @@ void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		if (GEngine)
 		{
+
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 01 COLLIDED"));
-			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
+			
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
 			OtherComp->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
-			OtherComp->AttachToComponent(TrunkSlot01, TransformTules);
-			
+			// AttachMeshToSocket(TrunkItem, );
 
 		}
 	}
@@ -136,6 +137,14 @@ void ABaseKart::CheckForCollision(ATrunkItem* OverlappingTrunkItem)
 	UE_LOG(LogTemp, Warning, TEXT("BASE KART CHECK FOR COLLISION ANSWERED"));
 
 
+
+}
+
+void ABaseKart::AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& InSocketName)
+{
+	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
+	//TrunkItem->AttachToComponent(, TransformRules, InSocketName);
+	
 
 }
 

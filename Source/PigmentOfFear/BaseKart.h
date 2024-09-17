@@ -16,6 +16,12 @@ class UCameraComponent;
 class ATrunkItem;
 class USceneComponent;
 
+
+// THIS IS WHERE YOU LEFT OFF
+// RELATED DELEGATES NEED THE INPUT PARAMETERS OF ONCOMPONENTBEGINOVERLAP. THATS LIKELY WHY WE ARE UNABLE TO COMPILE.
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FTrunkOverlapped, UPrimitiveComponent*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweepResult, bool, bWasSuccessful);
+//(FTrunkOverlapped, bool, bWasSuccessful);
+
 /**
  * 
  */
@@ -38,13 +44,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CheckForCollision(ATrunkItem* TrunkItem);
 
+	UPROPERTY()
 	ABaseKart* CollidingKart;
 
 	UFUNCTION(BlueprintCallable)
 	void OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-		const FHitResult& SweepResult);
+		const FHitResult& SweepResult, bool bWasSuccessful);
 
+	UFUNCTION(BlueprintCallable)
+	void AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& InSocketName);
 
 	UFUNCTION(BlueprintCallable)
 	void OnKartTrunkEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
@@ -69,6 +78,9 @@ public:
 
 	UPROPERTY()
 	ATrunkItem* TrunkItem;
+
+	UPROPERTY()
+	FTrunkOverlapped TrunkOverlapped;
 
 protected:
 

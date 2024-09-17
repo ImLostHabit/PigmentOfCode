@@ -21,13 +21,11 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnItemGrabbed.AddDynamic(this, &UGrabber::OnGrabbed);
-	OnItemReleased.AddDynamic(this, &UGrabber::OnReleased);
-
 
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 	if (PhysicsHandle == nullptr)
 	{
+		GrabbedItem = nullptr;
 		return;
 	}
 	
@@ -75,7 +73,6 @@ void UGrabber::Grab()
 				// As long as we dont have a item already held, asign the HitItem as our GrabbedItem
 				//GrabbedItem is a variable made in .h, 
 			GrabbedItem = HitItem;
-			OnItemGrabbed.Broadcast(true);
 			}
 		}
 		// Crypt Raider 97
@@ -91,44 +88,10 @@ void UGrabber::Grab()
 			NAME_None, 
 			HitResult.ImpactPoint, 
 			GetComponentRotation());
-	
-		
-
-	}
-	else
-	{
-		OnItemGrabbed.Broadcast(false);
 	}
 }
 
-void UGrabber::OnGrabbed(bool bWasSuccessful)
-{
-	if (bWasSuccessful)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ON GRABBED SUCCESSFUL"));
-		GrabbedItem->ItemGrabbed();
-		
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("GrabbedItem is nullptr"));
-	}
-}
 
-void UGrabber::OnReleased(bool bWasSuccessful)
-{
-
-	if (bWasSuccessful)
-	{
-		GrabbedItem->ItemReleased();
-		GrabbedItem = nullptr;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("FAILED TO RELEASE"));
-	}
-
-}
 
 void UGrabber::Release()
 {
@@ -140,10 +103,11 @@ void UGrabber::Release()
 
 	if (PhysicsHandle->GetGrabbedComponent() != nullptr)
 	{
-		OnItemReleased.Broadcast(true);
+		GrabbedItem->ItemReleasedDelegate.Broadcast(GrabbedItem, true);
 		PhysicsHandle->ReleaseComponent();
 	}
 }
+
 
 UPhysicsHandleComponent* UGrabber::GetPhysicsHandle() const
 {

@@ -17,6 +17,5 @@ class PIGMENTOFFEAR_API ATrunkItem : public AGrabbableItem
 
 public:
 
-	void ItemReleased() override;
 	
 };

@@ -7,6 +7,9 @@
 #include "BaseKart.h"
 #include "GrabbableItem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FItemReleasedDelegate, AGrabbableItem*, CurrentItem, bool, bWasSuccessful);
+
+
 
 
 class UKartTrunk;
@@ -22,14 +25,20 @@ class PIGMENTOFFEAR_API AGrabbableItem : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AGrabbableItem();
+	
 	UFUNCTION()
 	void ItemGrabbed();
 	
 	UFUNCTION()
-	virtual void ItemReleased();
+	virtual void ItemReleased(AGrabbableItem* ItemInput, bool bWasSuccessful);
 
+	UFUNCTION()
+	virtual void CheckForCollision(AGrabbableItem* ItemInput);
 	
 
+	
+	UPROPERTY()
+	AGrabbableItem* CurrentItem;
 
 	UPROPERTY()
 	ABaseKart* CurrentKart;
@@ -39,6 +48,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* ItemMesh;
+
+	UPROPERTY()
+	FItemReleasedDelegate ItemReleasedDelegate;
 	
 
 protected:
