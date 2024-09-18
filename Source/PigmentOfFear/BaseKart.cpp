@@ -20,7 +20,7 @@ void ABaseKart::BeginPlay()
 	Super::BeginPlay();
 	
 	
-	TrunkOverlapped.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
+	TrunkOverlapped.AddDynamic(this, &ABaseKart::StoreInTrunk);
 
 	//KartTrunkCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
 	//KartTrunkCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
@@ -79,7 +79,7 @@ ABaseKart::ABaseKart()
 	Camera->SetupAttachment(SpringArm);
 }
 
-void ABaseKart::OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult, bool bWasSuccessful)
+void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("RELEASE NOTICED WITHIN BOUNDS"));
 

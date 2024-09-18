@@ -103,7 +103,8 @@ void UGrabber::Release()
 
 	if (PhysicsHandle->GetGrabbedComponent() != nullptr)
 	{
-		GrabbedItem->ItemReleasedDelegate.Broadcast(GrabbedItem, true);
+
+		GrabbedItem->ItemReleased(true);
 		PhysicsHandle->ReleaseComponent();
 	}
 }

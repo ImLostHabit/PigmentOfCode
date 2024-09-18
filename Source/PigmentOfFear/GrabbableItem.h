@@ -7,7 +7,8 @@
 #include "BaseKart.h"
 #include "GrabbableItem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FItemReleasedDelegate, AGrabbableItem*, CurrentItem, bool, bWasSuccessful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FItemReleasedDelegate, AGrabbableItem*, CurrentItem, ABaseKart*, KartInput, bool, bWasSuccessful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGrabberReleased, bool, bWasSuccessful);
 
 
 
@@ -17,12 +18,27 @@ class ABaseKart;
 class UBoxComponent;
 class UStaticMeshComponent;
 
+UENUM(BlueprintType)
+enum class EItemState : uint8
+{
+
+	EIS_Single UMETA(DisplayName = "Single"),
+	EIS_Overlapped UMETA(DisplayName = "Overlapped"),
+	EIS_Stored UMETA(DisplayName = "Stored")
+
+};
+
 UCLASS()
 class PIGMENTOFFEAR_API AGrabbableItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
+	
+	EItemState ItemState = EItemState::EIS_Single;
+	
+	
+	
 	// Sets default values for this actor's properties
 	AGrabbableItem();
 	
@@ -30,13 +46,23 @@ public:
 	void ItemGrabbed();
 	
 	UFUNCTION()
-	virtual void ItemReleased(AGrabbableItem* ItemInput, bool bWasSuccessful);
+	virtual void ItemReleased(bool bWasSuccessful);
 
 	UFUNCTION()
-	virtual void CheckForCollision(AGrabbableItem* ItemInput);
-	
+	virtual void CheckForCollision(bool ItemReleased);
+
 
 	
+
+	UFUNCTION()
+	void ItemOnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+
+
+
 	UPROPERTY()
 	AGrabbableItem* CurrentItem;
 
@@ -52,10 +78,13 @@ public:
 	UPROPERTY()
 	FItemReleasedDelegate ItemReleasedDelegate;
 	
+	UPROPERTY()
+	FGrabberReleased GrabberReleased;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 
 
 

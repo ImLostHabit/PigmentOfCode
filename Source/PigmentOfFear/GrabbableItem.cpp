@@ -26,33 +26,48 @@ void AGrabbableItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ItemReleasedDelegate.AddDynamic(this, &AGrabbableItem::ItemReleased);
+	// ItemReleasedDelegate.AddDynamic(this, &AGrabbableItem::ItemReleased);
+	//BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AGrabbableItem::ItemReleased);
+	//GrabberReleased.AddDynamic(this, &AGrabbableItem::ItemReleased);
+	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AGrabbableItem::ItemOnOverlap);
+	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &AGrabbableItem::ItemOnEndOverlap);
+
 
 	
 	
 
 }
 
-void AGrabbableItem::ItemReleased(AGrabbableItem* InputItem, bool bWasSuccessful)
+void AGrabbableItem::ItemReleased(bool bWasSuccessful)
 {
-	CurrentItem = Cast<AGrabbableItem>(InputItem);
-	if (CurrentItem && GEngine)
+	if (ItemState == EItemState::EIS_Overlapped)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 7.f, FColor::Green, TEXT("YOU'RE SAFE .. FOR NOW."));
-		UE_LOG(LogTemp, Warning, TEXT("Item Released, calling CheckForCollision delegate.."));
-		CheckForCollision(InputItem);
+		UE_LOG(LogTemp, Warning, TEXT("ITEM RELEASED WITHIN BOUNDS.. \n Calling CheckForCollision.."));
+		CheckForCollision(true);
 	}
+	
+	if(ItemState == EItemState::EIS_Single)
+	{
+		ItemState = EItemState::EIS_Single;
+		UE_LOG(LogTemp, Warning, TEXT("ITEM RELEASED OUT OF BOUNDS"));
+	}
+	
 }
 
-void AGrabbableItem::CheckForCollision(AGrabbableItem* InputItem)
+
+void AGrabbableItem::CheckForCollision(bool ItemReleased)
 {
-	CurrentItem = Cast<AGrabbableItem>(InputItem);
+	UE_LOG(LogTemp, Warning, TEXT("CheckForCollision answered"));
+
 	
-	if (CurrentKart)
+	if (ItemState == EItemState::EIS_Overlapped)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Current Item Valid, checking CurrentBox"));
 		UBoxComponent* CurrentBox = CurrentKart->GetComponentByClass<UBoxComponent>();
-		if (CurrentKart && CurrentBox)
+		if (CurrentBox)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("CurrentItem & Box valid, GO TO FUCKING BED"));
+
 			FHitResult SweepResult;
 			UBoxComponent* OverlappedComponent = CurrentKart->GetComponentByClass<UBoxComponent>();
 			CurrentKart->TrunkOverlapped.Broadcast(OverlappedComponent, this, BoxComponent, 0, false, SweepResult, true);
@@ -61,6 +76,37 @@ void AGrabbableItem::CheckForCollision(AGrabbableItem* InputItem)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Item not released within bounds"));
 		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Current Item not valid"));
+	}
+}
+
+void AGrabbableItem::ItemOnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ITEM ON OVERLAP TRIGGERED .. CASTING TO CURRENT CART"));
+	CurrentKart = Cast<ABaseKart>(OtherActor);
+	UBoxComponent* KartCollision;
+	KartCollision = CurrentKart->GetComponentByClass<UBoxComponent>();
+
+	if (OtherActor == CurrentKart)
+	{
+	ItemState = EItemState::EIS_Overlapped;
+
+	}
+
+}
+
+void AGrabbableItem::ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor == CurrentKart)
+	{
+	ItemState = EItemState::EIS_Single;
+	UE_LOG(LogTemp, Warning, TEXT("ITEM END OVERLAP TRIGGERED .. CASTING TO CURRENT CART"));
+	CurrentKart = Cast<ABaseKart>(OtherActor);
+	UBoxComponent* KartCollision;
+	KartCollision = CurrentKart->GetComponentByClass<UBoxComponent>();
 	}
 }
 

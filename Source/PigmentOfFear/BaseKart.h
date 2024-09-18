@@ -48,7 +48,7 @@ public:
 	ABaseKart* CollidingKart;
 
 	UFUNCTION(BlueprintCallable)
-	void OnKartTrunkOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	void StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 		const FHitResult& SweepResult, bool bWasSuccessful);
 
