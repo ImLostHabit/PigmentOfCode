@@ -64,11 +64,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* KartTrunkCollision02;
 
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* SlotCollision01;
+	//UPROPERTY(EditAnywhere)
+	//UBoxComponent* SlotCollision01;
 
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* SlotCollision02;
+	//UPROPERTY(EditAnywhere)
+	//UBoxComponent* SlotCollision02;
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* TrunkSlot01;

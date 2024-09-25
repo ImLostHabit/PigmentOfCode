@@ -55,12 +55,12 @@ ABaseKart::ABaseKart()
 	TrunkSlot01->SetupAttachment(RootComponent);
 	TrunkSlot02 = CreateDefaultSubobject<USceneComponent>(TEXT("TrunkSlot02"));
 	TrunkSlot02->SetupAttachment(RootComponent);
-	SlotCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision01"));
-	SlotCollision02 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision02"));
-	SlotCollision01->SetupAttachment(TrunkSlot01);
-	SlotCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
-	SlotCollision02->SetupAttachment(TrunkSlot02);
-	SlotCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
+	//SlotCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision01"));
+	//SlotCollision02 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision02"));
+	//SlotCollision01->SetupAttachment(TrunkSlot01);
+	//SlotCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
+	//SlotCollision02->SetupAttachment(TrunkSlot02);
+	//SlotCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
 
 
 	KartTrunkCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("TrunkCollision01"));
@@ -70,7 +70,7 @@ ABaseKart::ABaseKart()
 	KartTrunkCollision02->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	KartTrunkCollision02->SetupAttachment(RootComponent);
 
-	SlotCollision01->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel3, ECollisionResponse::ECR_Overlap);
+	//SlotCollision01->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel3, ECollisionResponse::ECR_Overlap);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -94,28 +94,12 @@ void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* O
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 01 COLLIDED"));
 			
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
-			OtherComp->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
-			// AttachMeshToSocket(TrunkItem, );
-
+			AttachMeshToSocket(TrunkItem, FName("TrunkSlot01"));
+			//OtherComp->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
 		}
 	}
 
-
-	if (OverlappedComponent == SlotCollision01 && TrunkItem)
-	{
-		if (GEngine)
-		{
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 01 COLLIDED"));
-			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
-			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
-			SlotCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
-			UE_LOG(LogTemp, Warning, TEXT("TRUNK01 COLLISION SET TO IGNORE"));
-			OtherComp->AttachToComponent(TrunkSlot01, TransformTules);
-		}
-	}
-
-
+	
 	if (OverlappedComponent == KartTrunkCollision02 && TrunkItem)
 	{
 		if (GEngine)
@@ -123,9 +107,7 @@ void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* O
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 02 COLLIDED"));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
-			SlotCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
-			UE_LOG(LogTemp, Warning, TEXT("TRUNK02 COLLISION SET TO IGNORE"));
-			OtherComp->AttachToComponent(TrunkSlot02, TransformTules);
+			AttachMeshToSocket(TrunkItem, FName("TrunkSlot02"));
 		}
 	}
 }
@@ -143,7 +125,7 @@ void ABaseKart::CheckForCollision(ATrunkItem* OverlappingTrunkItem)
 void ABaseKart::AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& InSocketName)
 {
 	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-	//TrunkItem->AttachToComponent(, TransformRules, InSocketName);
+	TrunkItem->AttachToComponent(TrunkSlot01, TransformRules, InSocketName);
 	
 
 }

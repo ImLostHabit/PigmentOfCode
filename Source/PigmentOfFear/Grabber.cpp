@@ -103,9 +103,9 @@ void UGrabber::Release()
 
 	if (PhysicsHandle->GetGrabbedComponent() != nullptr)
 	{
-
 		GrabbedItem->ItemReleased(true);
 		PhysicsHandle->ReleaseComponent();
+		
 	}
 }
 
