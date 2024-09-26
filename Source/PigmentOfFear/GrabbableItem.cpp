@@ -34,22 +34,25 @@ void AGrabbableItem::BeginPlay()
 
 }
 
+// Called every frame
+void AGrabbableItem::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 void AGrabbableItem::ItemReleased(bool bWasSuccessful)
 {
 	if (ItemState == EItemState::EIS_Overlapped)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ITEM RELEASED WIT.. \n Calling CheckForCollision.."));
 		CheckForCollision(true);
-
-
 	}
-	
-	// LOGIC FOR OUT OF BOUNDS
-	
-	//	ItemState = EItemState::EIS_Single;
-	//	UE_LOG(LogTemp, Warning, TEXT("ITEM RELEASED OUT OF BOUNDS"));
-	
-	
+	else
+	{
+	UE_LOG(LogTemp, Warning, TEXT("ITEM RELEASED OUT OF BOUNDS"));
+	ItemState = EItemState::EIS_Single;
+	}	
 }
 
 
@@ -89,11 +92,8 @@ void AGrabbableItem::ItemOnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		UE_LOG(LogTemp, Warning, TEXT("SETTING ITEM STATE TO OVERLAP"));
 		ItemState = EItemState::EIS_Overlapped;
 	}
-
 	UBoxComponent* KartCollision;
 	KartCollision = CurrentKart->GetComponentByClass<UBoxComponent>();
-
-
 }
 
 void AGrabbableItem::ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -105,14 +105,6 @@ void AGrabbableItem::ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 void AGrabbableItem::ItemGrabbed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ITEM GRABBED VIA DELEGATE"));
-
-
 }
 
-// Called every frame
-void AGrabbableItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 

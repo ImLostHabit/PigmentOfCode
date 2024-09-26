@@ -22,12 +22,6 @@ void ABaseKart::BeginPlay()
 	
 	TrunkOverlapped.AddDynamic(this, &ABaseKart::StoreInTrunk);
 
-	//KartTrunkCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
-	//KartTrunkCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
-	//KartTrunkCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
-	//KartTrunkCollision02->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkEndOverlap);
-	//SlotCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
-	//SlotCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnKartTrunkOverlap);
 
 
 
@@ -55,12 +49,12 @@ ABaseKart::ABaseKart()
 	TrunkSlot01->SetupAttachment(RootComponent);
 	TrunkSlot02 = CreateDefaultSubobject<USceneComponent>(TEXT("TrunkSlot02"));
 	TrunkSlot02->SetupAttachment(RootComponent);
-	//SlotCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision01"));
-	//SlotCollision02 = CreateDefaultSubobject<UBoxComponent>(TEXT("SlotCollision02"));
-	//SlotCollision01->SetupAttachment(TrunkSlot01);
-	//SlotCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
-	//SlotCollision02->SetupAttachment(TrunkSlot02);
-	//SlotCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
+	SeatCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("SeatCollision01"));
+	SeatCollision02 = CreateDefaultSubobject<UBoxComponent>(TEXT("SeatCollision02"));
+	SeatCollision01->SetupAttachment(RootComponent);
+	SeatCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
+	SeatCollision02->SetupAttachment(RootComponent);
+	SeatCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
 
 
 	KartTrunkCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("TrunkCollision01"));
@@ -70,7 +64,6 @@ ABaseKart::ABaseKart()
 	KartTrunkCollision02->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	KartTrunkCollision02->SetupAttachment(RootComponent);
 
-	//SlotCollision01->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel3, ECollisionResponse::ECR_Overlap);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -95,7 +88,6 @@ void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* O
 			
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
 			AttachMeshToSocket(TrunkItem, FName("TrunkSlot01"));
-			//OtherComp->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
 		}
 	}
 
