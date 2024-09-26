@@ -67,9 +67,13 @@ void AGrabbableItem::CheckForCollision(bool ItemReleased)
 		UBoxComponent* CurrentBox = CurrentKart->GetComponentByClass<UBoxComponent>();
 		if (CurrentBox)
 		{
+			
 			UE_LOG(LogTemp, Warning, TEXT("CurrentItem & Box valid"));
 			FHitResult SweepResult;
-			UBoxComponent* OverlappedBox = CurrentKart->GetComponentByClass<UBoxComponent>();
+			UBoxComponent* OverlappedBox; // OVERLAPPED BOX NEEDS TO BE THE OVERLAPPED BOX THE GRABBABLE ITEM IS OVERLAPPING
+										  // THE BOX INITIALLY TURNED TO SEAT RATHER THAN TRUNK. NEED TO PASS THAT INFO IN.
+										  // LIKELY ARRAY WORK.
+			UE_LOG(LogTemp, Warning, TEXT("CHECK FOR COL. OverlappedBox = %s"), *OverlappedBox->GetName());
 			BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
 			CurrentKart->TrunkOverlapped.Broadcast(OverlappedBox, this, BoxComponent, 0, false, SweepResult, true);
 			UE_LOG(LogTemp, Warning, TEXT("SETTING ITEM TO SINGLE"));
@@ -105,6 +109,7 @@ void AGrabbableItem::ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 void AGrabbableItem::ItemGrabbed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ITEM GRABBED VIA DELEGATE"));
+	BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
 }
 
 

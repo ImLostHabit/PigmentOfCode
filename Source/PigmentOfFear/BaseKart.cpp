@@ -76,15 +76,15 @@ ABaseKart::ABaseKart()
 
 void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult, bool bWasSuccessful)
 {
-	UE_LOG(LogTemp, Warning, TEXT("RELEASE NOTICED WITHIN BOUNDS"));
+	UE_LOG(LogTemp, Warning, TEXT("STORE IN TRUNK TRIGGERED"));
 
-
+	// Validating our OtherActor with a variable
 	TrunkItem = Cast<ATrunkItem>(OtherActor);
 	UBoxComponent* TrunkCollision = Cast<UBoxComponent>(OverlappedComponent);
 
-	if (TrunkItem) 
+	if (OverlappedComponent == KartTrunkCollision01 && TrunkItem) 
 	{
-			AttachMeshToSocket(TrunkItem, FName("TrunkSocket01"));
+			AttachMeshToSocket(TrunkItem, FName("TrunkSlot01"));
 			UE_LOG(LogTemp, Warning, TEXT("TRUNK TRIGGERED, ATTACHING ITEM TO SLOT01 .. \n OverlappedComponeent = %s, OtherActor = %s"), *OverlappedComponent->GetName(), *OtherActor->GetName());
 		
 	}
@@ -98,7 +98,7 @@ void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* O
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 02 COLLIDED"));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
-			AttachMeshToSocket(TrunkItem, FName("TrunkSocket02"));
+			AttachMeshToSocket(TrunkItem, FName("TrunkSlot02"));
 		}
 		else
 		{
