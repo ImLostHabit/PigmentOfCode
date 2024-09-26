@@ -12,6 +12,8 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
 class UInputMappingContext;
+class UUserWidget;
+class UCapsuleComponent;
 
 
 UCLASS()
@@ -51,6 +53,12 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* CapsuleCollision;
+
+
+
 
 	
 

@@ -15,6 +15,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class ATrunkItem;
 class USceneComponent;
+class UInteractWidget;
 
 
 // THIS IS WHERE YOU LEFT OFF
@@ -58,6 +59,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnKartTrunkEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
+	UFUNCTION(BlueprintCallable)
+	void OnSeatEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
+	UFUNCTION(BlueprintCallable)
+	void OnSeatOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+
+	//BLUEPRINT EVENTS
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowInteractPrompt();
+
+
+	
+
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* KartTrunkCollision01;
 
@@ -84,7 +99,13 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UInteractWidget> InteractionWidgetClass;
 
+	UPROPERTY()
+	UInteractWidget* CurrentInteractionWidget;
+
+	
 
 
 private:

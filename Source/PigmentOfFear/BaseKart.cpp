@@ -10,6 +10,8 @@
 #include "TrunkItem.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Blueprint/UserWidget.h"
+#include "InteractWidget.h"
 
 // GAMETRACE CHANNEL 1  = USABLE (HORROR ENGINE)
 // GAMETRACE CHANNEL 2 = GRABBER
@@ -23,8 +25,10 @@ void ABaseKart::BeginPlay()
 	TrunkOverlapped.AddDynamic(this, &ABaseKart::StoreInTrunk);
 
 
-
-
+	SeatCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnSeatOverlap);
+	SeatCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnSeatEndOverlap);
+	SeatCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnSeatOverlap);
+	SeatCollision02->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnSeatEndOverlap);
 
 }
 
@@ -35,17 +39,13 @@ void ABaseKart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(ThrottleAction, ETriggerEvent::Triggered, this, &ABaseKart::Throttle);
-
-
 	}
-
-
 }
 
 ABaseKart::ABaseKart()
 {
 
-	TrunkSlot01 = CreateDefaultSubobject<USceneComponent>(TEXT("TrunkSlot"));
+	TrunkSlot01 = CreateDefaultSubobject<USceneComponent>(TEXT("TrunkSlot01"));
 	TrunkSlot01->SetupAttachment(RootComponent);
 	TrunkSlot02 = CreateDefaultSubobject<USceneComponent>(TEXT("TrunkSlot02"));
 	TrunkSlot02->SetupAttachment(RootComponent);
@@ -55,7 +55,9 @@ ABaseKart::ABaseKart()
 	SeatCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
 	SeatCollision02->SetupAttachment(RootComponent);
 	SeatCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
-
+	SeatCollision01->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	SeatCollision02->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	
 
 	KartTrunkCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("TrunkCollision01"));
 	KartTrunkCollision01->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
@@ -79,27 +81,31 @@ void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 	TrunkItem = Cast<ATrunkItem>(OtherActor);
 
-	if (OverlappedComponent == KartTrunkCollision01 && TrunkItem)
+	if (KartTrunkCollision01 && TrunkItem) 
 	{
-		if (GEngine)
-		{
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 01 COLLIDED"));
 			
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
-			AttachMeshToSocket(TrunkItem, FName("TrunkSlot01"));
-		}
+			AttachMeshToSocket(TrunkItem, FName("TrunkSocket01"));
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SOMETHING ON SLOT 01 INVALID"));
 	}
 
 	
-	if (OverlappedComponent == KartTrunkCollision02 && TrunkItem)
+	if (KartTrunkCollision02 && TrunkItem)
 	{
 		if (GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 02 COLLIDED"));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
-			AttachMeshToSocket(TrunkItem, FName("TrunkSlot02"));
+			AttachMeshToSocket(TrunkItem, FName("TrunkSocket02"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SOMETHING ON SLOT 02 INVALID"));
 		}
 	}
 }
@@ -131,6 +137,40 @@ void ABaseKart::OnKartTrunkEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 	UE_LOG(LogTemp, Warning, TEXT("COLLISION RE-ENABLED"));
 }
 
+void ABaseKart::OnSeatEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("SEAT IS GETTING COLD..."));
+	
+
+		if (CurrentInteractionWidget)
+		{
+		CurrentInteractionWidget->RemoveFromParent();
+		}
+}
+
+void ABaseKart::OnSeatOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("SEAT IS GETTING WARM.. CHECKING WIDGET"));
+	if (InteractionWidgetClass)
+	{
+		if (!CurrentInteractionWidget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("NO WIDGET FOUND .. CREATING.."));
+			CurrentInteractionWidget = CreateWidget<UInteractWidget>(GetWorld(), InteractionWidgetClass);
+			UE_LOG(LogTemp, Warning, TEXT("SUCCESS IN CREATING.."));
+		}
+
+		if (CurrentInteractionWidget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ADDING TO VIEWPORT.."));
+			CurrentInteractionWidget->AddToViewport();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("WIDGET NOT VALID"));
+		}
+	}
+}
 void ABaseKart::Throttle()
 {
 
@@ -140,3 +180,5 @@ void ABaseKart::Throttle()
 	}
 
 }
+
+
