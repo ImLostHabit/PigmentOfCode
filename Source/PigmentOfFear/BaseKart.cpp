@@ -80,24 +80,21 @@ void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 
 	TrunkItem = Cast<ATrunkItem>(OtherActor);
+	UBoxComponent* TrunkCollision = Cast<UBoxComponent>(OverlappedComponent);
 
-	if (KartTrunkCollision01 && TrunkItem) 
+	if (TrunkItem) 
 	{
-			
-			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT01 .."));
 			AttachMeshToSocket(TrunkItem, FName("TrunkSocket01"));
+			UE_LOG(LogTemp, Warning, TEXT("TRUNK TRIGGERED, ATTACHING ITEM TO SLOT01 .. \n OverlappedComponeent = %s, OtherActor = %s"), *OverlappedComponent->GetName(), *OtherActor->GetName());
 		
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("SOMETHING ON SLOT 01 INVALID"));
-	}
-
 	
-	if (KartTrunkCollision02 && TrunkItem)
+	
+	if (OverlappedComponent == KartTrunkCollision02 && TrunkItem)
 	{
 		if (GEngine)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("TRUNK 02 TRIGGERED, ATTACHING ITEM TO SLOT02 .."));
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 02 COLLIDED"));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
@@ -105,7 +102,7 @@ void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* O
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("SOMETHING ON SLOT 02 INVALID"));
+			UE_LOG(LogTemp, Warning, TEXT("KartTrunk likely invalid."));
 		}
 	}
 }

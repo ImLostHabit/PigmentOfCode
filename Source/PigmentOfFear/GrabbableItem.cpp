@@ -85,7 +85,7 @@ void AGrabbableItem::CheckForCollision(bool ItemReleased)
 
 void AGrabbableItem::ItemOnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ITEM ON OVERLAP TRIGGERED .."));
+	UE_LOG(LogTemp, Warning, TEXT("ITEM ON OVERLAP TRIGGERED .. Overlapping item = %s"), *OtherComp->GetName());
 	CurrentKart = Cast<ABaseKart>(OtherActor);
 	if (OtherActor == CurrentKart)
 	{
