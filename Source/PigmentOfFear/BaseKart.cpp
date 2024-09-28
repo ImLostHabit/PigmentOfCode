@@ -83,27 +83,25 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 	TrunkItem = Cast<ATrunkItem>(OtherActor);
 	UTrunkCollision* TrunkCollision = Cast<UTrunkCollision>(OverlappedComponent);
 
-	if (OverlappedComponent == KartTrunkCollision01 && TrunkItem) 
+	if (TrunkItem)
 	{
+
+
+		if (OverlappedComponent == KartTrunkCollision01)
+		{
 			AttachMeshToSocket(TrunkItem, FName("TrunkSlot01"));
-			UE_LOG(LogTemp, Warning, TEXT("TRUNK TRIGGERED, ATTACHING ITEM TO SLOT01 .. \n OverlappedComponeent = %s, OtherActor = %s"), *OverlappedComponent->GetName(), *OtherActor->GetName());
-		
-	}
-	
-	
-	if (OverlappedComponent == KartTrunkCollision02 && TrunkItem)
-	{
-		if (GEngine)
+			TrunkItem->IsAttached = true;
+			UE_LOG(LogTemp, Warning, TEXT("ATTACHING ITEM TO SLOT01 .. \n OverlappedComponeent = %s, OtherActor = %s"), *OverlappedComponent->GetName(), *OtherActor->GetName());
+
+		}
+		else if (OverlappedComponent == KartTrunkCollision02)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("TRUNK 02 TRIGGERED, ATTACHING ITEM TO SLOT02 .."));
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("TRUNK COLLISION 02 COLLIDED"));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
 			AttachMeshToSocket(TrunkItem, FName("TrunkSlot02"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("KartTrunk likely invalid."));
+			TrunkItem->IsAttached = true;
+
 		}
 	}
 }

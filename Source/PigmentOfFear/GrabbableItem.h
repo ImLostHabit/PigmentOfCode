@@ -8,7 +8,9 @@
 #include "GrabbableItem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FItemReleasedDelegate, AGrabbableItem*, CurrentItem, ABaseKart*, KartInput, bool, bWasSuccessful);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGrabberReleased, AGrabbableItem*, GrabbableItem, bool, bWasSuccessful);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGrabberReleased, bool, bWasSuccessful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGrabbed, AGrabbableItem*, TrunkItem, bool, bWasSuccessful);
 
 
 
@@ -44,14 +46,16 @@ public:
 	AGrabbableItem();
 	
 	UFUNCTION()
-	void ItemGrabbed();
+	void OnItemGrabbed(AGrabbableItem* TrunkItem, bool bWasSuccessful);
+
+	UFUNCTION()
+	void OnItemReleased(bool bWasSuccessful);
 	
 	UFUNCTION()
 	virtual void ItemReleased(bool bWasSuccessful);
 
 	UFUNCTION()
 	virtual void CheckForCollision(bool ItemReleased);
-
 
 	
 
@@ -63,6 +67,8 @@ public:
 
 
 
+	UPROPERTY()
+	bool IsAttached;
 
 	UPROPERTY()
 	AGrabbableItem* CurrentItem;
@@ -81,6 +87,9 @@ public:
 	
 	UPROPERTY()
 	FGrabberReleased GrabberReleased;
+
+	UPROPERTY()
+	FOnGrabbed ItemGrabbed;
 
 protected:
 	// Called when the game starts or when spawned

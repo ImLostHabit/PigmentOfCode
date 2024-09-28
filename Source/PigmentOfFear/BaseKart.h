@@ -21,7 +21,8 @@ class UTrunkCollision;
 
 	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FTrunkOverlapped, UTrunkCollision*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweepResult, bool, bWasSuccessful);
-	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTrunkItemGrabbed, bool, bWasSuccessful);
+
 
 /**
  * 
@@ -96,6 +97,9 @@ public:
 
 	UPROPERTY()
 	FTrunkOverlapped TrunkOverlapped;
+	
+	UPROPERTY()
+	FTrunkItemGrabbed TrunkItemGrabbed;
 
 protected:
 

@@ -30,6 +30,8 @@ void AGrabbableItem::BeginPlay()
 
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AGrabbableItem::ItemOnOverlap);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &AGrabbableItem::ItemOnEndOverlap);
+	ItemGrabbed.AddDynamic(this, &AGrabbableItem::OnItemGrabbed);
+	GrabberReleased.AddDynamic(this, &AGrabbableItem::OnItemReleased);
 
 	ItemState = EItemState::EIS_Single;
 
@@ -46,7 +48,7 @@ void AGrabbableItem::ItemReleased(bool bWasSuccessful)
 {
 	if (ItemState == EItemState::EIS_Overlapped)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ITEM RELEASED WIT.. \n Calling CheckForCollision.."));
+		UE_LOG(LogTemp, Warning, TEXT("ITEM RELEASED.. \n Calling CheckForCollision.."));
 		CheckForCollision(true);
 	}
 	else
@@ -60,10 +62,10 @@ void AGrabbableItem::ItemReleased(bool bWasSuccessful)
 void AGrabbableItem::CheckForCollision(bool ItemReleased)
 {
 	UE_LOG(LogTemp, Warning, TEXT("CheckForCollision answered"));
-
 	
 	if (ItemState == EItemState::EIS_Overlapped)
 	{
+		ItemState = EItemState::EIS_Single;
 		UE_LOG(LogTemp, Warning, TEXT("Current Item Valid, checking CurrentBox"));
 		UTrunkCollision* CurrentBox = CurrentKart->GetComponentByClass<UTrunkCollision>();
 		if (CurrentBox)
@@ -71,19 +73,16 @@ void AGrabbableItem::CheckForCollision(bool ItemReleased)
 			
 			UE_LOG(LogTemp, Warning, TEXT("CurrentItem & Box valid"));
 			FHitResult SweepResult;
-			 // OVERLAPPED BOX NEEDS TO BE THE OVERLAPPED BOX THE GRABBABLE ITEM IS OVERLAPPING
-										  // THE BOX INITIALLY TURNED TO SEAT RATHER THAN TRUNK. NEED TO PASS THAT INFO IN.
-										  // LIKELY ARRAY WORK.
 			UE_LOG(LogTemp, Warning, TEXT("CHECK FOR COL. OverlappedBox = %s"), *CurrentBox->GetName());
 			BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
 			CurrentKart->TrunkOverlapped.Broadcast(CurrentBox, this, BoxComponent, 0, false, SweepResult, true);
-			UE_LOG(LogTemp, Warning, TEXT("SETTING ITEM TO SINGLE"));
-			ItemState = EItemState::EIS_Single;
+			IsAttached = true;
+			
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Item not released within bounds"));
-			ItemState = EItemState::EIS_Single;
+		
 		}
 	}
 }
@@ -97,20 +96,63 @@ void AGrabbableItem::ItemOnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		UE_LOG(LogTemp, Warning, TEXT("SETTING ITEM STATE TO OVERLAP"));
 		ItemState = EItemState::EIS_Overlapped;
 	}
-	UTrunkCollision* KartCollision;
-	KartCollision = CurrentKart->GetComponentByClass<UTrunkCollision>();
 }
 
 void AGrabbableItem::ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ITEM END OVERLAP TRIGGERED .. SETTING ITEM TO SINGLE"));
 	ItemState = EItemState::EIS_Single;
+	
 }
 
-void AGrabbableItem::ItemGrabbed()
+void AGrabbableItem::OnItemGrabbed(AGrabbableItem* TrunkItem, bool bWasSuccessful)
 {
+	IsAttached = false;
 	UE_LOG(LogTemp, Warning, TEXT("ITEM GRABBED VIA DELEGATE"));
-	BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
+	AGrabbableItem* CurrentTrunkItem;
+	CurrentTrunkItem = Cast<AGrabbableItem>(TrunkItem);
+	if (CurrentTrunkItem == TrunkItem)
+	{
+		if (CurrentTrunkItem->IsAttached)
+		{
+			if (CurrentTrunkItem->GetAttachParentActor() != nullptr)
+			{
+			UE_LOG(LogTemp, Warning, TEXT("GRABBED TRUNK ITEM FOUND IN SLOT .. DETATCHING.."));
+			CurrentTrunkItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			UE_LOG(LogTemp, Warning, TEXT("ITEM DETATCHED FROM SLOT .. SETTING STATE TO SINGLE.."));
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("GRABBED TRUNK ITEM NOT FOUND IN SLOT.."));
+			}
+
+				BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
+				ItemState = EItemState::EIS_Single;
+				UE_LOG(LogTemp, Warning, TEXT("ITEM SET TO SINGLE"));
+		}
+		else if (!CurrentTrunkItem->IsAttached)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ITEM NOT IN SLOT"));
+			BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
+			ItemState = EItemState::EIS_Single;
+			UE_LOG(LogTemp, Warning, TEXT("ITEM SET TO SINGLE"));
+		}
+
+	}
+
+}
+
+void AGrabbableItem::OnItemReleased(bool bWasSuccessful)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ON ITEM RELEASED DELEGATE ANSWERED"));
+	if (bWasSuccessful)
+	{
+	ItemState = EItemState::EIS_Single;
+	UE_LOG(LogTemp, Warning, TEXT("YOU NEEDED AN IF CHECK"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TRUNK ITEM LIKELY INVALID."));
+	}
 }
 
 

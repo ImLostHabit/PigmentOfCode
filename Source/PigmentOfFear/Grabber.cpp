@@ -65,17 +65,22 @@ void UGrabber::Grab()
 
 	if (HasHit)
 	{
+		UE_LOG(LogTemp, Display, TEXT("HIT SOMETHING"));
 		AGrabbableItem* HitItem = Cast<AGrabbableItem>(HitResult.GetActor());
 		if (HitItem)
 		{
+			UE_LOG(LogTemp, Display, TEXT("HIT AN ITEM"));
 			if (GrabbedItem == nullptr)
 			{
 				// As long as we dont have a item already held, asign the HitItem as our GrabbedItem
 				//GrabbedItem is a variable made in .h, 
 			GrabbedItem = HitItem;
+			GrabbedItem->ItemGrabbed.Broadcast(HitItem, true);
+			GrabbedItem->IsAttached = false;
 			}
 		}
 		// Crypt Raider 97
+
 
 		AActor* HitActor = HitResult.GetActor();
 		UE_LOG(LogTemp, Display, TEXT("Hit Actor"));
@@ -105,6 +110,7 @@ void UGrabber::Release()
 	{
 		GrabbedItem->ItemReleased(true);
 		PhysicsHandle->ReleaseComponent();
+		GrabbedItem = nullptr;
 		
 	}
 }
