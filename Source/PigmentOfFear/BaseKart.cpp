@@ -90,7 +90,7 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 		if (OverlappedComponent == KartTrunkCollision01)
 		{
 			AttachMeshToSocket(TrunkItem, FName("TrunkSlot01"));
-			TrunkItem->IsAttached = true;
+			TrunkItem->bIsAttached = true;
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING ITEM TO SLOT01 .. \n OverlappedComponeent = %s, OtherActor = %s"), *OverlappedComponent->GetName(), *OtherActor->GetName());
 
 		}
@@ -100,7 +100,7 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
 			AttachMeshToSocket(TrunkItem, FName("TrunkSlot02"));
-			TrunkItem->IsAttached = true;
+			TrunkItem->bIsAttached = true;
 
 		}
 	}

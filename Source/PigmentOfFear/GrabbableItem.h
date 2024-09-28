@@ -69,7 +69,7 @@ public:
 
 
 	UPROPERTY()
-	bool IsAttached;
+	bool bIsAttached = false;
 
 	UPROPERTY()
 	AGrabbableItem* CurrentItem;

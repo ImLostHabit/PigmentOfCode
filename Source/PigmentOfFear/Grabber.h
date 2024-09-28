@@ -44,7 +44,7 @@ private:
 
 	
 	UPROPERTY()
-	AGrabbableItem* GrabbedItem = nullptr;
+	AGrabbableItem* GrabbedItem;
 
 	// Grabber Properties
 

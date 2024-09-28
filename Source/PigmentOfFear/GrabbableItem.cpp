@@ -76,7 +76,7 @@ void AGrabbableItem::CheckForCollision(bool ItemReleased)
 			UE_LOG(LogTemp, Warning, TEXT("CHECK FOR COL. OverlappedBox = %s"), *CurrentBox->GetName());
 			BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
 			CurrentKart->TrunkOverlapped.Broadcast(CurrentBox, this, BoxComponent, 0, false, SweepResult, true);
-			IsAttached = true;
+			bIsAttached = true;
 			
 		}
 		else
@@ -106,13 +106,13 @@ void AGrabbableItem::ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 
 void AGrabbableItem::OnItemGrabbed(AGrabbableItem* TrunkItem, bool bWasSuccessful)
 {
-	IsAttached = false;
+	bIsAttached = false;
 	UE_LOG(LogTemp, Warning, TEXT("ITEM GRABBED VIA DELEGATE"));
 	AGrabbableItem* CurrentTrunkItem;
 	CurrentTrunkItem = Cast<AGrabbableItem>(TrunkItem);
 	if (CurrentTrunkItem == TrunkItem)
 	{
-		if (CurrentTrunkItem->IsAttached)
+		if (CurrentTrunkItem->bIsAttached)
 		{
 			if (CurrentTrunkItem->GetAttachParentActor() != nullptr)
 			{
@@ -124,12 +124,8 @@ void AGrabbableItem::OnItemGrabbed(AGrabbableItem* TrunkItem, bool bWasSuccessfu
 			{
 				UE_LOG(LogTemp, Warning, TEXT("GRABBED TRUNK ITEM NOT FOUND IN SLOT.."));
 			}
-
-				BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
-				ItemState = EItemState::EIS_Single;
-				UE_LOG(LogTemp, Warning, TEXT("ITEM SET TO SINGLE"));
 		}
-		else if (!CurrentTrunkItem->IsAttached)
+		else if (!CurrentTrunkItem->bIsAttached)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("ITEM NOT IN SLOT"));
 			BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);

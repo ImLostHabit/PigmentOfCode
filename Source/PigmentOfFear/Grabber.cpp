@@ -72,10 +72,40 @@ void UGrabber::Grab()
 			UE_LOG(LogTemp, Display, TEXT("HIT AN ITEM"));
 			if (GrabbedItem == nullptr)
 			{
+				GrabbedItem = HitItem;
+				UE_LOG(LogTemp, Display, TEXT("GRABBED ITEM POSITIVE NULL"));
+				if (!HitItem->bIsAttached)
+				{
+				GrabbedItem->ItemGrabbed.Broadcast(HitItem, true);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Display, TEXT("ITEM GRABBED NOT ATTACHED. ALLEGEDLY."));
+				}
+				
+				
+				if (HitItem->bIsAttached)
+				{
+				GrabbedItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+				GrabbedItem->ItemState = EItemState::EIS_Single;
+				GrabbedItem = HitItem;
+				GrabbedItem->ItemGrabbed.Broadcast(HitItem, true);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Display, TEXT("ITEM GRABBED NOT ATTACHED. ALLEGEDLY."));
+				}
 				// As long as we dont have a item already held, asign the HitItem as our GrabbedItem
 				//GrabbedItem is a variable made in .h, 
-			GrabbedItem = HitItem;
-			GrabbedItem->ItemGrabbed.Broadcast(HitItem, true);
+				
+				
+				
+				/*if (!GrabbedItem && GrabbedItem->bIsAttached)
+				{
+					GrabbedItem->ItemState = EItemState::EIS_Single;
+					GrabbedItem = HitItem;
+				}
+				*/
 			}
 		}
 		// Crypt Raider 97
