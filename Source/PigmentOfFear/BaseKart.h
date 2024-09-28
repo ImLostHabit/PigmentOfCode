@@ -16,12 +16,12 @@ class UCameraComponent;
 class ATrunkItem;
 class USceneComponent;
 class UInteractWidget;
+class UTrunkCollision;
 
 
-// THIS IS WHERE YOU LEFT OFF
-// RELATED DELEGATES NEED THE INPUT PARAMETERS OF ONCOMPONENTBEGINOVERLAP. THATS LIKELY WHY WE ARE UNABLE TO COMPILE.
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FTrunkOverlapped, UPrimitiveComponent*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweepResult, bool, bWasSuccessful);
-//(FTrunkOverlapped, bool, bWasSuccessful);
+	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FTrunkOverlapped, UTrunkCollision*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweepResult, bool, bWasSuccessful);
+	
 
 /**
  * 
@@ -49,7 +49,7 @@ public:
 	ABaseKart* CollidingKart;
 
 	UFUNCTION(BlueprintCallable)
-	void StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	void StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 		const FHitResult& SweepResult, bool bWasSuccessful);
 
@@ -57,7 +57,7 @@ public:
 	void AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& InSocketName);
 
 	UFUNCTION(BlueprintCallable)
-	void OnKartTrunkEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void OnKartTrunkEndOverlap(UTrunkCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
 	UFUNCTION(BlueprintCallable)
 	void OnSeatEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
@@ -74,10 +74,10 @@ public:
 	
 
 	UPROPERTY(EditAnywhere)
-	UBoxComponent* KartTrunkCollision01;
+	UTrunkCollision* KartTrunkCollision01;
 
 	UPROPERTY(EditAnywhere)
-	UBoxComponent* KartTrunkCollision02;
+	UTrunkCollision* KartTrunkCollision02;
 
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* SeatCollision01;

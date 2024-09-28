@@ -12,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "InteractWidget.h"
+#include "TrunkCollision.h"
 
 // GAMETRACE CHANNEL 1  = USABLE (HORROR ENGINE)
 // GAMETRACE CHANNEL 2 = GRABBER
@@ -59,10 +60,10 @@ ABaseKart::ABaseKart()
 	SeatCollision02->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	
 
-	KartTrunkCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("TrunkCollision01"));
+	KartTrunkCollision01 = CreateDefaultSubobject<UTrunkCollision>(TEXT("TrunkCollision01"));
 	KartTrunkCollision01->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	KartTrunkCollision01->SetupAttachment(RootComponent);
-	KartTrunkCollision02 = CreateDefaultSubobject<UBoxComponent>(TEXT("TrunkCollision02"));
+	KartTrunkCollision02 = CreateDefaultSubobject<UTrunkCollision>(TEXT("TrunkCollision02"));
 	KartTrunkCollision02->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	KartTrunkCollision02->SetupAttachment(RootComponent);
 
@@ -74,13 +75,13 @@ ABaseKart::ABaseKart()
 	Camera->SetupAttachment(SpringArm);
 }
 
-void ABaseKart::StoreInTrunk(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult, bool bWasSuccessful)
+void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("STORE IN TRUNK TRIGGERED"));
 
 	// Validating our OtherActor with a variable
 	TrunkItem = Cast<ATrunkItem>(OtherActor);
-	UBoxComponent* TrunkCollision = Cast<UBoxComponent>(OverlappedComponent);
+	UTrunkCollision* TrunkCollision = Cast<UTrunkCollision>(OverlappedComponent);
 
 	if (OverlappedComponent == KartTrunkCollision01 && TrunkItem) 
 	{
@@ -127,7 +128,7 @@ void ABaseKart::AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& In
 
 
 
-void ABaseKart::OnKartTrunkEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void ABaseKart::OnKartTrunkEndOverlap(UTrunkCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	UE_LOG(LogTemp, Warning, TEXT("CART ENDED OVERLAP .. RE-ENABLING COLLISION"));
 	OtherComp->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);

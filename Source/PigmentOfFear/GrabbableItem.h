@@ -17,6 +17,7 @@ class UKartTrunk;
 class ABaseKart;
 class UBoxComponent;
 class UStaticMeshComponent;
+class UTrunkCollision;
 
 UENUM(BlueprintType)
 enum class EItemState : uint8

@@ -4,6 +4,7 @@
 #include "Grabber.h"
 #include "Components/BoxComponent.h"
 #include "BaseKart.h"
+#include "TrunkCollision.h"
 
 // Sets default values
 AGrabbableItem::AGrabbableItem()
@@ -64,18 +65,18 @@ void AGrabbableItem::CheckForCollision(bool ItemReleased)
 	if (ItemState == EItemState::EIS_Overlapped)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current Item Valid, checking CurrentBox"));
-		UBoxComponent* CurrentBox = CurrentKart->GetComponentByClass<UBoxComponent>();
+		UTrunkCollision* CurrentBox = CurrentKart->GetComponentByClass<UTrunkCollision>();
 		if (CurrentBox)
 		{
 			
 			UE_LOG(LogTemp, Warning, TEXT("CurrentItem & Box valid"));
 			FHitResult SweepResult;
-			UBoxComponent* OverlappedBox; // OVERLAPPED BOX NEEDS TO BE THE OVERLAPPED BOX THE GRABBABLE ITEM IS OVERLAPPING
+			 // OVERLAPPED BOX NEEDS TO BE THE OVERLAPPED BOX THE GRABBABLE ITEM IS OVERLAPPING
 										  // THE BOX INITIALLY TURNED TO SEAT RATHER THAN TRUNK. NEED TO PASS THAT INFO IN.
 										  // LIKELY ARRAY WORK.
-			UE_LOG(LogTemp, Warning, TEXT("CHECK FOR COL. OverlappedBox = %s"), *OverlappedBox->GetName());
+			UE_LOG(LogTemp, Warning, TEXT("CHECK FOR COL. OverlappedBox = %s"), *CurrentBox->GetName());
 			BoxComponent->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Ignore);
-			CurrentKart->TrunkOverlapped.Broadcast(OverlappedBox, this, BoxComponent, 0, false, SweepResult, true);
+			CurrentKart->TrunkOverlapped.Broadcast(CurrentBox, this, BoxComponent, 0, false, SweepResult, true);
 			UE_LOG(LogTemp, Warning, TEXT("SETTING ITEM TO SINGLE"));
 			ItemState = EItemState::EIS_Single;
 		}
@@ -96,8 +97,8 @@ void AGrabbableItem::ItemOnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		UE_LOG(LogTemp, Warning, TEXT("SETTING ITEM STATE TO OVERLAP"));
 		ItemState = EItemState::EIS_Overlapped;
 	}
-	UBoxComponent* KartCollision;
-	KartCollision = CurrentKart->GetComponentByClass<UBoxComponent>();
+	UTrunkCollision* KartCollision;
+	KartCollision = CurrentKart->GetComponentByClass<UTrunkCollision>();
 }
 
 void AGrabbableItem::ItemOnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
