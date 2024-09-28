@@ -76,7 +76,6 @@ void UGrabber::Grab()
 				//GrabbedItem is a variable made in .h, 
 			GrabbedItem = HitItem;
 			GrabbedItem->ItemGrabbed.Broadcast(HitItem, true);
-			GrabbedItem->IsAttached = false;
 			}
 		}
 		// Crypt Raider 97
