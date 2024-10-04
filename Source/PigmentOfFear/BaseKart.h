@@ -80,16 +80,16 @@ public:
 	UPROPERTY(EditAnywhere)
 	UTrunkCollision* KartTrunkCollision02;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* SeatCollision01;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* SeatCollision02;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* TrunkSlot01;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* TrunkSlot02;
 
 	UPROPERTY()

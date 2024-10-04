@@ -94,7 +94,14 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::Interact()
 {
-}
+	//if overlapping component = *some type of interact*
+	// call item interacted delegate
+	// this way, anything interactable can have its own function. 
+	// Start with the Kart, any other interactables should be "straightforward" once figuring the Kart out.
+	
+	
+}	
+	
 
 void APlayerCharacter::Grab()
 {
