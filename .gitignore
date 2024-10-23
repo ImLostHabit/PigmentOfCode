@@ -1,17 +1,33 @@
-Binaries/
-DerivedDataCache
-Intermediate/
-Saved/
-Content/
+# Ignore Unreal Engine auto-generated and binary directories
+/Binaries/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+/Content/
+/Build/
+
+# Ignore Visual Studio Code and Visual Studio specific files
 .vscode/
 .vs/
 *.VC.db
 *.opensdf
 *.opendb
 *.sdf
-*.sln
 *.suo
+*.png
+.vsconfig
+
+# Ignore Unreal Engine asset files (uasset and umap)
+/*.uasset
+/*.umap
+
+# Track the Source folder (for C++ code)
+!/Source/
+
+# Don't ignore .uproject files; they are important for tracking the project configuration
+!*.uproject
+
+# Ignore IDE-specific project files for other environments
+*.sln
 *.xcodeproj
 *.xcworkspace
-.vsconfig
-Build/
