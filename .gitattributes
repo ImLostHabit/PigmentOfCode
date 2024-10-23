@@ -16,6 +16,7 @@
 *.md text
 *.txt text
 
+
 # Ignore Unreal Engine asset files (you won't be tracking them)
 *.uasset -text
 *.umap -text
