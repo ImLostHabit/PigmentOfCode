@@ -54,9 +54,9 @@ ABaseKart::ABaseKart()
 	SeatCollision01 = CreateDefaultSubobject<USeatCollision>(TEXT("SeatCollision01"));
 	SeatCollision02 = CreateDefaultSubobject<USeatCollision>(TEXT("SeatCollision02"));
 	SeatCollision01->SetupAttachment(RootComponent);
-	//SeatCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
+	SeatCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
 	SeatCollision02->SetupAttachment(RootComponent);
-	//SeatCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
+	SeatCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
 	SeatCollision01->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	SeatCollision02->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	

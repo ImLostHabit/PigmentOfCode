@@ -83,10 +83,10 @@ public:
 	UTrunkCollision* KartTrunkCollision02;
 
 	UPROPERTY(EditAnywhere)
-	USeatCollision* SeatCollision01;
+	UBoxComponent* SeatCollision01;
 
 	UPROPERTY(EditAnywhere)
-	USeatCollision* SeatCollision02;
+	UBoxComponent* SeatCollision02;
 
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* TrunkSlot01;
