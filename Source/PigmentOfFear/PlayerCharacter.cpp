@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "BaseKart.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -24,7 +25,13 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	CapsuleComp = GetCapsuleComponent();
+
+	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnPlayerOverlap);
+
+	PlayerController = Cast<APlayerController>(GetController());
+
+	if (PlayerController == Cast<APlayerController>(GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
@@ -48,6 +55,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("THE PLAYER IS RECIEVING ITS INPUT PARAMS"));
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
 
@@ -62,8 +70,24 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 }
 
 
+void APlayerCharacter::OnPlayerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("THE PLAYER IS BEING NOTICED"));
+
+	CurrentKart = Cast<ABaseKart>(OtherActor);
+	if (OtherActor == CurrentKart)
+	{
+		
+		CharacterState = ECharacterState::ECS_Overlapped;
+		bIsPlayerOverlapped = true;
+	}
+}
+
+
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
+
+	
 	// We technically are only moving within 2 planes. X and Y, hence 2D Vector.
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -94,7 +118,19 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::Interact()
 {
-	//if overlapping component = *some type of interact*
+
+	if (bIsPlayerOverlapped)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("*Enters Vehicle*"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("*Cries*"));
+	}
+
+	
+
+	//if overlapping component = *some type of interactable*
 	// call item interacted delegate
 	// this way, anything interactable can have its own function. 
 	// Start with the Kart, any other interactables should be "straightforward" once figuring the Kart out.
@@ -105,7 +141,6 @@ void APlayerCharacter::Interact()
 
 void APlayerCharacter::Grab()
 {
-
 
 
 }

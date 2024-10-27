@@ -81,7 +81,7 @@ void AGrabbableItem::CheckForCollision(bool ItemReleased)
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Item not released within bounds"));
+			UE_LOG(LogTemp, Warning, TEXT("Item not released within bounds of trunk"));
 		
 		}
 	}

@@ -14,7 +14,20 @@ class UInputAction;
 class UInputMappingContext;
 class UUserWidget;
 class UCapsuleComponent;
+class USeatCollision;
+class ABaseKart;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractButtonPressed, bool, bWasSuccessful);
+
+
+
+enum class ECharacterState : uint8
+{
+
+	ECS_Single UMETA(DisplayName = "Single"),
+	ECS_Overlapped UMETA(DisplayName = "Overlapped"),
+
+};
 
 UCLASS()
 class PIGMENTOFFEAR_API APlayerCharacter : public ACharacter
@@ -24,6 +37,8 @@ class PIGMENTOFFEAR_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
+	ECharacterState CharacterState = ECharacterState::ECS_Single;
 
 
 protected:
@@ -54,10 +69,28 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;
 
-	UPROPERTY(EditDefaultsOnly)
-	UCapsuleComponent* CapsuleCollision;
+	UPROPERTY()
+	USeatCollision* OverlappingSeat;
+
+	UPROPERTY()
+	ABaseKart* CurrentKart;
+
+	UPROPERTY()
+	APlayerController* PlayerController;
+
+	UPROPERTY()
+	FInteractButtonPressed InteractButtonPressed;
+	
+	UPROPERTY()
+	UCapsuleComponent* CapsuleComp;
 
 
+
+	UFUNCTION()
+	void OnPlayerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UPROPERTY()
+	bool bIsPlayerOverlapped;
 
 
 	

@@ -20,14 +20,26 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
-
+	/*
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 	if (PhysicsHandle == nullptr)
 	{
 		GrabbedItem = nullptr;
 		return;
 	}
+	*/
+	
+	UPhysicsHandleComponent* PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle != nullptr)
+	{
+		PhysicsHandle->GetName();
+		UE_LOG(LogTemp, Display, TEXT("%s Ready to grab"), *PhysicsHandle->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("No Grabber Found"));
+	}
+	
 	
 }
 

@@ -12,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "InteractWidget.h"
+#include "SeatCollision.h"
 #include "TrunkCollision.h"
 
 // GAMETRACE CHANNEL 1  = USABLE (HORROR ENGINE)
@@ -50,12 +51,12 @@ ABaseKart::ABaseKart()
 	TrunkSlot01->SetupAttachment(RootComponent);
 	TrunkSlot02 = CreateDefaultSubobject<USceneComponent>(TEXT("TrunkSlot02"));
 	TrunkSlot02->SetupAttachment(RootComponent);
-	SeatCollision01 = CreateDefaultSubobject<UBoxComponent>(TEXT("SeatCollision01"));
-	SeatCollision02 = CreateDefaultSubobject<UBoxComponent>(TEXT("SeatCollision02"));
+	SeatCollision01 = CreateDefaultSubobject<USeatCollision>(TEXT("SeatCollision01"));
+	SeatCollision02 = CreateDefaultSubobject<USeatCollision>(TEXT("SeatCollision02"));
 	SeatCollision01->SetupAttachment(RootComponent);
-	SeatCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
+	//SeatCollision01->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
 	SeatCollision02->SetupAttachment(RootComponent);
-	SeatCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Block);
+	//SeatCollision02->SetCollisionResponseToChannel(ECC_EngineTraceChannel3, ECR_Overlap);
 	SeatCollision01->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	SeatCollision02->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	
@@ -85,7 +86,7 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 
 	if (TrunkItem)
 	{
-
+		// SEAT COLLISION RELATIONSHIP WITH PLAYER
 
 		if (OverlappedComponent == KartTrunkCollision01)
 		{
@@ -107,14 +108,6 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 }
 
 
-
-void ABaseKart::CheckForCollision(ATrunkItem* OverlappingTrunkItem)
-{
-	UE_LOG(LogTemp, Warning, TEXT("BASE KART CHECK FOR COLLISION ANSWERED"));
-
-
-
-}
 
 void ABaseKart::AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& InSocketName)
 {

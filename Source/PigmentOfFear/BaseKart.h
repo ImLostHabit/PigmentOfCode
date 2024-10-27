@@ -17,10 +17,12 @@ class ATrunkItem;
 class USceneComponent;
 class UInteractWidget;
 class UTrunkCollision;
+class USeatCollision;
 
 
 	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FTrunkOverlapped, UTrunkCollision*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweepResult, bool, bWasSuccessful);
+
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTrunkItemGrabbed, bool, bWasSuccessful);
 
 
@@ -44,7 +46,7 @@ public:
 	ABaseKart();
 
 	UFUNCTION(BlueprintCallable)
-	void CheckForCollision(ATrunkItem* TrunkItem);
+	void CheckForCollision(ATrunkItem* OverlappingTrunkItem);
 
 	UPROPERTY()
 	ABaseKart* CollidingKart;
@@ -80,11 +82,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	UTrunkCollision* KartTrunkCollision02;
 
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* SeatCollision01;
+	UPROPERTY(EditAnywhere)
+	USeatCollision* SeatCollision01;
 
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* SeatCollision02;
+	UPROPERTY(EditAnywhere)
+	USeatCollision* SeatCollision02;
 
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* TrunkSlot01;

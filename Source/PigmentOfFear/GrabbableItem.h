@@ -8,10 +8,10 @@
 #include "GrabbableItem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FItemReleasedDelegate, AGrabbableItem*, CurrentItem, ABaseKart*, KartInput, bool, bWasSuccessful);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGrabberReleased, AGrabbableItem*, GrabbableItem, bool, bWasSuccessful);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGrabberReleased, bool, bWasSuccessful);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGrabbed, AGrabbableItem*, TrunkItem, bool, bWasSuccessful);
-// DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FTrunkOverlapped, UTrunkCollision*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweepResult, bool, bWasSuccessful);
+
 
 
 
