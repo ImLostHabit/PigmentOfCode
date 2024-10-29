@@ -25,12 +25,15 @@ void ABaseKart::BeginPlay()
 	
 	
 	TrunkOverlapped.AddDynamic(this, &ABaseKart::StoreInTrunk);
+	SeatOverlapped.AddDynamic(this, &ABaseKart::OnSeatOverlap);
+	
+	//SeatOverlapped.AddDynamic(this, &ABaseKart::OnSeatOverlap);
 
 
-	SeatCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnSeatOverlap);
-	SeatCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnSeatEndOverlap);
-	SeatCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnSeatOverlap);
-	SeatCollision02->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnSeatEndOverlap);
+	//SeatCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnSeatOverlap);
+	//SeatCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnSeatEndOverlap);
+	//SeatCollision02->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnSeatOverlap);
+	//SeatCollision02->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnSeatEndOverlap);
 
 }
 
@@ -126,7 +129,7 @@ void ABaseKart::OnKartTrunkEndOverlap(UTrunkCollision* OverlappedComponent, AAct
 	UE_LOG(LogTemp, Warning, TEXT("COLLISION RE-ENABLED"));
 }
 
-void ABaseKart::OnSeatEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void ABaseKart::OnSeatEndOverlap(USeatCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweetResult, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("SEAT IS GETTING COLD..."));
 	
@@ -134,7 +137,7 @@ void ABaseKart::OnSeatEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		
 }
 
-void ABaseKart::OnSeatOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ABaseKart::OnSeatOverlap(USeatCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweetResult, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("SEAT IS GETTING WARM..."));
 	

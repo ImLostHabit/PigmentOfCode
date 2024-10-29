@@ -23,6 +23,8 @@ class USeatCollision;
 	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FTrunkOverlapped, UTrunkCollision*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweepResult, bool, bWasSuccessful);
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams(FSeatOverlapped, USeatCollision*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult&, SweetResult, bool, bWasSuccessful);
+
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTrunkItemGrabbed, bool, bWasSuccessful);
 
 
@@ -63,10 +65,10 @@ public:
 	void OnKartTrunkEndOverlap(UTrunkCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
 	UFUNCTION(BlueprintCallable)
-	void OnSeatEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void OnSeatEndOverlap(USeatCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweetResult, bool bWasSuccessful);
 	
 	UFUNCTION(BlueprintCallable)
-	void OnSeatOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnSeatOverlap(USeatCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweetResult, bool bWasSuccessful);
 	
 
 	//BLUEPRINT EVENTS
@@ -99,6 +101,9 @@ public:
 
 	UPROPERTY()
 	FTrunkOverlapped TrunkOverlapped;
+
+	UPROPERTY()
+	FSeatOverlapped SeatOverlapped;
 	
 	UPROPERTY()
 	FTrunkItemGrabbed TrunkItemGrabbed;
