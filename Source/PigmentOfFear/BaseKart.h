@@ -47,8 +47,7 @@ public:
 
 	ABaseKart();
 
-	UFUNCTION(BlueprintCallable)
-	void CheckForCollision(ATrunkItem* OverlappingTrunkItem);
+	
 
 	UPROPERTY()
 	ABaseKart* CollidingKart;
@@ -59,7 +58,7 @@ public:
 		const FHitResult& SweepResult, bool bWasSuccessful);
 
 	UFUNCTION(BlueprintCallable)
-	void AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& InSocketName);
+	void AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, USceneComponent* InSocketName);
 
 	UFUNCTION(BlueprintCallable)
 	void OnKartTrunkEndOverlap(UTrunkCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
@@ -78,16 +77,16 @@ public:
 
 	
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	UTrunkCollision* KartTrunkCollision01;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	UTrunkCollision* KartTrunkCollision02;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USeatCollision* SeatCollision01;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USeatCollision* SeatCollision02;
 
 	UPROPERTY(EditDefaultsOnly)

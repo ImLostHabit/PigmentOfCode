@@ -85,6 +85,7 @@ void UGrabber::Grab()
 			if (GrabbedItem == nullptr)
 			{
 				GrabbedItem = HitItem;
+				GrabbedItem->ItemMesh->SetSimulatePhysics(true);
 				UE_LOG(LogTemp, Display, TEXT("GRABBED ITEM POSITIVE NULL"));
 				if (!HitItem->bIsAttached)
 				{

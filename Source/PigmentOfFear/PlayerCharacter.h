@@ -63,10 +63,10 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UInputAction* JumpAction;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	USpringArmComponent* SpringArm;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	UCameraComponent* Camera;
 
 	UPROPERTY()
@@ -88,6 +88,9 @@ protected:
 
 	UFUNCTION()
 	void OnPlayerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnPlayerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY()
 	bool bIsPlayerOverlapped;

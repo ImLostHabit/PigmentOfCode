@@ -14,6 +14,13 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+
+	SpringArm->SetupAttachment(RootComponent);
+	Camera->SetupAttachment(SpringArm);
+
+
 	
 
 }
@@ -28,6 +35,7 @@ void APlayerCharacter::BeginPlay()
 	CapsuleComp = GetCapsuleComponent();
 
 	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnPlayerOverlap);
+	CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnPlayerEndOverlap);
 
 	PlayerController = Cast<APlayerController>(GetController());
 
@@ -38,7 +46,6 @@ void APlayerCharacter::BeginPlay()
 			Subsystem->AddMappingContext(MovementContext, 0);
 		}
 	}
-	
 }
 
 // Called every frame
@@ -80,6 +87,19 @@ void APlayerCharacter::OnPlayerOverlap(UPrimitiveComponent* OverlappedComponent,
 		
 		CharacterState = ECharacterState::ECS_Overlapped;
 		bIsPlayerOverlapped = true;
+	}
+}
+
+void APlayerCharacter::OnPlayerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
+	UE_LOG(LogTemp, Warning, TEXT("THE PLAYER IS WALKING AWAY"));
+
+	CurrentKart = Cast<ABaseKart>(OtherActor);
+	if (OtherActor == CurrentKart)
+	{
+		CharacterState = ECharacterState::ECS_Single;
+		bIsPlayerOverlapped = false;
 	}
 }
 
@@ -127,8 +147,6 @@ void APlayerCharacter::Interact()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("*Cries*"));
 	}
-
-	
 
 	//if overlapping component = *some type of interactable*
 	// call item interacted delegate

@@ -23,12 +23,8 @@ void ABaseKart::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
 	TrunkOverlapped.AddDynamic(this, &ABaseKart::StoreInTrunk);
 	SeatOverlapped.AddDynamic(this, &ABaseKart::OnSeatOverlap);
-	
-	//SeatOverlapped.AddDynamic(this, &ABaseKart::OnSeatOverlap);
-
 
 	//SeatCollision01->OnComponentBeginOverlap.AddDynamic(this, &ABaseKart::OnSeatOverlap);
 	//SeatCollision01->OnComponentEndOverlap.AddDynamic(this, &ABaseKart::OnSeatEndOverlap);
@@ -89,12 +85,12 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 
 	if (TrunkItem)
 	{
-		// SEAT COLLISION RELATIONSHIP WITH PLAYER
 
 		if (OverlappedComponent == KartTrunkCollision01)
 		{
-			AttachMeshToSocket(TrunkItem, FName("TrunkSlot01"));
+			AttachMeshToSocket(TrunkItem, TrunkSlot01);
 			TrunkItem->bIsAttached = true;
+			TrunkItem->ItemMesh->SetSimulatePhysics(false);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING ITEM TO SLOT01 .. \n OverlappedComponeent = %s, OtherActor = %s"), *OverlappedComponent->GetName(), *OtherActor->GetName());
 
 		}
@@ -103,7 +99,7 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 			UE_LOG(LogTemp, Warning, TEXT("TRUNK 02 TRIGGERED, ATTACHING ITEM TO SLOT02 .."));
 			FAttachmentTransformRules TransformTules(EAttachmentRule::SnapToTarget, true);
 			UE_LOG(LogTemp, Warning, TEXT("ATTACHING TO SLOT02 .."));
-			AttachMeshToSocket(TrunkItem, FName("TrunkSlot02"));
+			AttachMeshToSocket(TrunkItem, TrunkSlot02);
 			TrunkItem->bIsAttached = true;
 
 		}
@@ -112,10 +108,10 @@ void ABaseKart::StoreInTrunk(UTrunkCollision* OverlappedComponent, AActor* Other
 
 
 
-void ABaseKart::AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, const FName& InSocketName)
+void ABaseKart::AttachMeshToSocket(ATrunkItem* CurrentTrunkItem, USceneComponent* InSocketName)
 {
 	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-	TrunkItem->AttachToComponent(TrunkSlot01, TransformRules, InSocketName);
+	TrunkItem->AttachToComponent(InSocketName, TransformRules);
 	
 
 }
@@ -132,9 +128,7 @@ void ABaseKart::OnKartTrunkEndOverlap(UTrunkCollision* OverlappedComponent, AAct
 void ABaseKart::OnSeatEndOverlap(USeatCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweetResult, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Warning, TEXT("SEAT IS GETTING COLD..."));
-	
 
-		
 }
 
 void ABaseKart::OnSeatOverlap(USeatCollision* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweetResult, bool bWasSuccessful)

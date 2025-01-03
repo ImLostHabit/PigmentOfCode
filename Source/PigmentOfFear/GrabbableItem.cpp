@@ -28,6 +28,7 @@ void AGrabbableItem::BeginPlay()
 	Super::BeginPlay();
 
 
+	ItemMesh->SetSimulatePhysics(false);
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AGrabbableItem::ItemOnOverlap);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &AGrabbableItem::ItemOnEndOverlap);
 	ItemGrabbed.AddDynamic(this, &AGrabbableItem::OnItemGrabbed);
